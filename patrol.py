@@ -8,6 +8,8 @@ import time
 from random import choice
 import datetime
 import asyncio
+import os
+import sys
 
 description = ""
 
