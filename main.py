@@ -31,6 +31,10 @@ async def restart(ctx):
         os.execl(python, python, *sys.argv)
 
 @bot.command()
+async def ping(ctx):
+    await ctx.channel.send("pong")
+
+@bot.command()
 async def quote(ctx):
     log_com(ctx)
     await ctx.channel.send(requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
