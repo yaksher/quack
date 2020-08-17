@@ -19,6 +19,7 @@ async def on_ready():
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
+    print(sys.argv)
     print('------')
     while True:
         for channel in subbed:

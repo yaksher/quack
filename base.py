@@ -3,9 +3,7 @@ import re
 import requests
 from discord.ext import commands
 from collections import Counter, defaultdict
-#from random import randint
 import asyncio
-import threading
 import os
 import sys
 
@@ -18,6 +16,7 @@ async def on_ready():
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
+    print(sys.argv)
     print('------')
 
 def log_com(ctx, perms=True):
