@@ -100,7 +100,7 @@ async def on_message_edit(before, after):
 
 @bot.event
 async def on_message(msg):
-    if msg.content == "?restart" and message.author.id == yak_id:
+    if msg.content == "?restart" and msg.author.id == yak_id:
         os.system("git pull")
         os.execl(sys.executable, sys.executable, *sys.argv)
     send_id = msg.author.id
