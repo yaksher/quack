@@ -7,6 +7,8 @@ from sympy import *
 import io
 import numpy as np
 import re
+import sys
+import os
 
 description = ""
 
@@ -20,6 +22,12 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('------')
+
+@bot.command()
+async def restart(ctx):
+    if ctx.message.author.id == 133270838605643776:
+        os.system("git pull")
+        os.execl(sys.executable, sys.executable, *sys.argv)
 
 @bot.command()
 async def graph(ctx, *args):#x_bound:str, y_bound = "", *args):
