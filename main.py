@@ -42,7 +42,7 @@ async def on_message(msg):
     for task in tasks:
         await task
 
-change_tss = True
+change_TSS = True
 async def patrol_msg(message):
     global change_TSS
     if message.guild:
@@ -388,7 +388,7 @@ def log_com(ctx, perms=True):
     if not perms:
         print("User did not have permissions.")
 
-async def restart():
+def restart():
     os.system("git pull")
     os.execl(sys.executable, sys.executable, *sys.argv)
 
