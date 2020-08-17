@@ -141,9 +141,7 @@ async def on_message(msg):
     global dm_channel
     if send_id in admin_ids:
         if msg.guild == None:
-            if dm_channel == None:
-                await msg.channel.send("Hi!")
-                dm_channel = msg.channel
+            dm_channel = msg.channel
             if msg.content == "vent":
                 admin_ids.remove(send_id)
                 subbed.append(msg.channel)
