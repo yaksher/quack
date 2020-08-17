@@ -6,6 +6,8 @@ from collections import Counter, defaultdict
 #from random import randint
 import asyncio
 import threading
+import os
+import sys
 
 description = ""
 
@@ -22,6 +24,11 @@ def log_com(ctx, perms=True):
     print("Command called: \"" + ctx.message.content.split(" ")[0] + "\" in channel: \"" + ctx.channel.name + "\"")
     if not perms:
         print("User did not have permissions.")
+
+@bot.command()
+async def restart(ctx):
+    if ctx.message.author.id == 133270838605643776:
+        os.execl(python, python, *sys.argv)
 
 @bot.command()
 async def quote(ctx):
