@@ -33,7 +33,7 @@ async def restart(ctx):
 
 @bot.command()
 async def ping(ctx):
-    await ctx.channel.send("pong")
+    await ctx.channel.send("pong pong")
 
 @bot.command()
 async def quote(ctx):
