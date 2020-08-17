@@ -43,7 +43,7 @@ async def on_message(msg):
         await task
 
 change_tss = True
-async def patrol_msg(msg):
+async def patrol_msg(message):
     global change_TSS
     if message.guild:
         print(message.author, message.content)
@@ -52,10 +52,7 @@ async def patrol_msg(msg):
         if is_boomer(message):
             print("Deleted \"ok boomer\" in channel", message.channel)
             await message.delete()
-        messages = await message.channel.purge(limit=5, check=is_boomer)
-        if messages != []:
-            print(messages, message.channel)
-        if is_ooc(message) and message.channel.name != "rp-council":
+        if is_ooc(message):
             print("Moved OOC message from channel", message.channel)
             ooc_channel = next(channel for channel in message.guild.channels if "rp-ooc" == channel.name)
             await ooc_channel.send("**[%s] %s:** %s" % (message.channel.name[3:], str(message.author.display_name), trim_ooc(process_pings(message))))
@@ -83,9 +80,6 @@ async def patrol_msg(msg):
     if message.content == "&quote":
         await message.channel.send(requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
     Yak_ID = 133270838605643776
-    if message.content == "?restart" and message.author.id == yak_id:
-        os.system("git pull")
-        os.execl(sys.executable, sys.executable, *sys.argv)
     if message.author.id == Yak_ID:
         role = message.author.roles[-2]
         if message.guild.id == ace_id or role.id == 710307102115102732:
@@ -467,7 +461,6 @@ async def move(ctx, limit: int, chnl_name: str):
     for msg in msgs:
             await ooc_channel.send("**[%s] %s:** %s" % (ctx.channel.name, str(msg.author.display_name), process_pings(msg)))
 
-
 @bot.command()
 async def wordcounts(ctx, limit = None, ignore_ooc_check = 1):
     await ctx.message.delete()
@@ -582,7 +575,6 @@ async def love(ctx, name: str):
 
 def is_boomer(msg):
     return msg.author.id == 280497242714931202
-
 
 @bot.command()
 async def graph(ctx, *args):#x_bound:str, y_bound = "", *args):
