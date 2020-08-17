@@ -180,7 +180,7 @@ async def on_message(msg):
                     await msg.channel.send(f"{[guild.name for guild in bot.guilds if send_id == yak_id or guild.id != 692554651941339196]}")
                 else:
                     await msg.channel.send(f"{[channel.name for channel in sel_guild.channels if channel.type == discord.ChannelType.text]}")
-            else:
+            elif sel_channel is not None:
                 file_ = await msg.attachments[0].to_file() if len(msg.attachments) == 1 else None
                 files = [await attachment.to_file() for attachment in msg.attachments] if len(msg.attachments) > 1 else None
                 sent_msg = await sel_channel.send(process_msg(msg), file = file_, files = files)
