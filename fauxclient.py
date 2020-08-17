@@ -100,9 +100,6 @@ async def on_message_edit(before, after):
 
 @bot.event
 async def on_message(msg):
-    if msg.content == "?restart" and msg.author.id == yak_id:
-        os.system("git pull")
-        os.execl(sys.executable, sys.executable, *sys.argv)
     send_id = msg.author.id
     if msg.guild is None and not send_id in admin_ids and send_id != bot.user.id and bot.get_guild(tech_id).get_member(send_id) is not None:
         if not msg.channel in subbed:
@@ -136,6 +133,9 @@ async def on_message(msg):
                 message_duplicates[msg.id].append(sent_msg)
                 message_duplicates[sent_msg.id].append(msg)
     #print(f"{msg.author} [{msg.guild}/{msg.channel if msg.guild else None}]: {msg.content}")
+    if msg.content == "?restart" and msg.author.id == yak_id:
+        os.system("git pull")
+        os.execl(sys.executable, sys.executable, *sys.argv)
     global sel_guild
     global sel_channel
     global dm_channel
