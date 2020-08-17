@@ -65,7 +65,7 @@ async def on_message(message):
     if message.content == "&quote":
         await message.channel.send(requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
     Yak_ID = 133270838605643776
-    if message.content = "?restart" and message.author.id == yak_id:
+    if message.content == "?restart" and message.author.id == yak_id:
         os.execl(python, python, *sys.argv)
     if message.author.id == Yak_ID:
         role = message.author.roles[-2]
