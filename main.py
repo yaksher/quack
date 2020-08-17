@@ -28,7 +28,8 @@ def log_com(ctx, perms=True):
 @bot.command()
 async def restart(ctx):
     if ctx.message.author.id == 133270838605643776:
-        os.execl(python, python, *sys.argv)
+        os.system("git pull")
+        os.execl(sys.executable, sys.executable, *sys.argv)
 
 @bot.command()
 async def ping(ctx):
