@@ -51,8 +51,12 @@ async def graph(ctx, *args):#x_bound:str, y_bound = "", *args):
     expr.subs(Symbol("e"), np.e)
     expr.subs(Symbol("pi"), np.pi)
     expr.subs(Symbol("π"), np.pi)
-    f = np.vectorize(lambda x: expr.subs(Symbol("x"), x))
-    x = np.linspace(*x_bounds, 1000)
+    try:
+        f = lambdify(Symbol("x"), expr, modules=numpy)
+        x = np.linspace(*x_bounds, 1000)
+    except:
+        f = np.vectorize(lambda x: expr.subs(Symbol("x"), x))
+        x = np.linspace(*x_bounds, 100)
     y = f(x)
     for i, y_elem in enumerate(y):
         try:
