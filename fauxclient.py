@@ -1,12 +1,7 @@
-import discord
-import re
 from random import randint
-from discord.ext import commands
 from collections import defaultdict
-import time
-import asyncio
-import os
-import sys
+
+from quack_common import *
 
 description = ""
 
@@ -39,16 +34,12 @@ forward = defaultdict(lambda: True)
 small_ids = defaultdict(lambda: randint(0, 999))
 message_duplicates = defaultdict(lambda: [])
 
-yak_id = 133270838605643776
-slav_id = 193701039633989632
-tech_id = 659440262422069269
+admin_ids_live = admin_ids[:]
 vent_id = 659559008159531039
-admin_ids = [yak_id, slav_id]
-admin_ids_bak = admin_ids[:]
 
 def end_session(channel):
     if channel.recipient.id in admin_ids_bak:
-        admin_ids.append(channel.recipient.id)
+        admin_ids_live.append(channel.recipient.id)
     session_time.pop(channel.id, None)
     small_ids.pop(channel.id, None)
     forward.pop(channel.id, None)
@@ -102,7 +93,7 @@ async def on_message_edit(before, after):
 @bot.event
 async def on_message(msg):
     send_id = msg.author.id
-    if msg.guild is None and not send_id in admin_ids and send_id != bot.user.id and bot.get_guild(tech_id).get_member(send_id) is not None:
+    if msg.guild is None and not send_id in admin_ids_live and send_id != bot.user.id and bot.get_guild(tech_id).get_member(send_id) is not None:
         if not msg.channel in subbed:
             subbed.append(msg.channel)
             await msg.channel.send(f"To stop getting messages from venting and support, type `.silent`. To end your session, type `.end`. Session expires after 30 minutes of inactivity. Your ID is {small_ids[msg.channel.id]}.")
@@ -134,17 +125,16 @@ async def on_message(msg):
                 message_duplicates[msg.id].append(sent_msg)
                 message_duplicates[sent_msg.id].append(msg)
     #print(f"{msg.author} [{msg.guild}/{msg.channel if msg.guild else None}]: {msg.content}")
-    if msg.content == "?restart" and msg.author.id == yak_id:
-        os.system("git pull")
-        os.execl(sys.executable, sys.executable, *sys.argv)
+    if msg.content == "?restart":
+        restart_func(send_id)
     global sel_guild
     global sel_channel
     global dm_channel
-    if send_id in admin_ids:
+    if send_id in admin_ids_live:
         if msg.guild == None:
             dm_channel = msg.channel
             if msg.content == "vent":
-                admin_ids.remove(send_id)
+                admin_ids_live.remove(send_id)
                 subbed.append(msg.channel)
                 await msg.channel.send(f"To stop getting messages from venting and support, type `.silent`. To end your session, type `.end`. Session expires after 30 minutes of inactivity. Your ID is {small_ids[msg.channel.id]}.")
                 return

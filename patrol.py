@@ -1,15 +1,9 @@
-import discord
-import re
 import requests
 import math as m
 from random import randint
-from discord.ext import commands
-import time
 from random import choice
-import datetime
-import asyncio
-import os
-import sys
+
+from quack_common import *
 
 description = ""
 
@@ -30,7 +24,6 @@ async def on_message(message):
     global change_TSS
     if message.guild:
         print(message.author, message.content)
-    ace_id = 463225414534430721
     if message.guild and message.guild.id == ace_id:
         if is_boomer(message):
             print("Deleted \"ok boomer\" in channel", message.channel)
@@ -65,23 +58,21 @@ async def on_message(message):
 
     if message.content == "&quote":
         await message.channel.send(requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
-    Yak_ID = 133270838605643776
-    if message.content == "?restart" and message.author.id == yak_id:
-        os.system("git pull")
-        os.execl(sys.executable, sys.executable, *sys.argv)
-    if message.author.id == Yak_ID and message.guild is not None:
+    if message.content == "?restart":
+        restart(message.author.id)
+    if message.author.id == yak_ID and message.guild is not None:
         role = message.author.roles[-2]
         if message.guild.id == ace_id or role.id == 710307102115102732:
             await role.edit(colour=random_colour())
     for user in message.mentions:
-        if user.id == Yak_ID:
+        if user.id == yak_ID:
             role = user.roles[-2]
             if message.guild.id == ace_id or role.id == 710307102115102732:
                 await role.edit(colour=random_colour())
     content_lower = message.content.lower()
     if re.match(r"(.*yakov.*)|(.*yasha.*)", content_lower):
         for m in message.guild.members:
-            if m.id == Yak_ID:
+            if m.id == yak_ID:
                 role = m.roles[-2]
                 if message.guild.id == ace_id or role.id == 710307102115102732:
                     await role.edit(colour=random_colour())

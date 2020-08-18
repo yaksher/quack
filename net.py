@@ -5,8 +5,6 @@ from discord.ext import commands
 from collections import Counter
 import sys
 import gpt_2_simple as gpt2
-#from random import randint
-#import asyncio
 
 description = ""
 

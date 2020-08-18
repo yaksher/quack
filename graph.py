@@ -1,14 +1,10 @@
-import discord
-from discord.ext import commands
 import matplotlib.pyplot as plt
 from sympy.parsing.sympy_parser import parse_expr
 from sympy.parsing.sympy_parser import standard_transformations, implicit_multiplication_application
 from sympy import *
-import io
 import numpy as np
-import re
-import sys
-import os
+
+from quack_common import *
 
 description = ""
 
@@ -26,9 +22,7 @@ async def on_ready():
 
 @bot.command()
 async def restart(ctx):
-    if ctx.message.author.id == 133270838605643776:
-        os.system("git pull")
-        os.execl(sys.executable, sys.executable, *sys.argv)
+    restart_func(ctx.author.id)
 
 @bot.command()
 async def graph(ctx, *args):#x_bound:str, y_bound = "", *args):
@@ -83,7 +77,7 @@ async def graph(ctx, *args):#x_bound:str, y_bound = "", *args):
     buf.name = "graph.png"
     fig.savefig(buf, format='png', transparent=True)
     buf.seek(0)
-    await ctx.channel.send(file=discord.File(buf))
+    await ctx.send(file=discord.File(buf))
 
 f = open("maintoken.txt", "r")
 token = f.readlines()[0]

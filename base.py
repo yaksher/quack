@@ -1,13 +1,10 @@
-import discord
-import re
 import requests
-from discord.ext import commands
 from collections import Counter, defaultdict
 import asyncio
-import os
-import sys
 import smbc_parser
 import io
+
+from quack_common import *
 
 description = ""
 
@@ -22,19 +19,17 @@ async def on_ready():
     print('------')
 
 def log_com(ctx, perms=True):
-    print("Command called: \"" + ctx.message.content.split(" ")[0] + "\" in channel: \"" + ctx.channel.name + "\"")
+    print(f"Command called: \"{ctx.message.content.split(" ")[0]}\" in channel: \"{ctx.channel.name}\" by \"{ctx.author}\"")
     if not perms:
         print("User did not have permissions.")
 
 @bot.command()
 async def restart(ctx):
-    if ctx.message.author.id == 133270838605643776:
-        os.system("git pull")
-        os.execl(sys.executable, sys.executable, *sys.argv)
+    restart_func(ctx.author.id)
 
 @bot.command()
 async def ping(ctx):
-    await ctx.channel.send("pong pong")
+    await ctx.send("pong pong")
 
 def download(img_url):
     buf = io.BytesIO()
@@ -57,18 +52,18 @@ async def smbc(ctx, *args):
     embed.set_image(comic_embed)
     embed.set_footer(hover_text)
     embed.set_thumbnail(after_comic_embed)
-    await ctx.channel.send(embed=embed)
+    await ctx.send(embed=embed)
     # Actually send the file here.
 
 @bot.command()
 async def quote(ctx):
     log_com(ctx)
-    await ctx.channel.send(requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
+    await ctx.send(requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
 
 @bot.command()
 async def purge(ctx, limit: int):
     await ctx.message.delete()
-    if not ctx.message.author.permissions_in(ctx.channel).manage_messages:
+    if not ctx.author.permissions_in(ctx.channel).manage_messages:
         log_com(ctx, False)
         return
     log_com(ctx)
@@ -104,7 +99,7 @@ def process_pings(msg):
 @bot.command()
 async def moveooc(ctx, limit: int, chnl_name = "rp-ooc"):
     await ctx.message.delete()
-    if not ctx.message.author.permissions_in(ctx.channel).manage_messages:
+    if not ctx.author.permissions_in(ctx.channel).manage_messages:
         log_com(ctx, False)
         return
     log_com(ctx)
@@ -116,7 +111,7 @@ async def moveooc(ctx, limit: int, chnl_name = "rp-ooc"):
 @bot.command()
 async def move(ctx, limit: int, chnl_name: str):
     await ctx.message.delete()
-    if not ctx.message.author.permissions_in(ctx.channel).manage_messages:
+    if not ctx.author.permissions_in(ctx.channel).manage_messages:
         log_com(ctx, False)
         return
     log_com(ctx)
@@ -145,33 +140,33 @@ async def wordcounts(ctx, limit = None, ignore_ooc_check = 1):
     for tup in list:
         print(tup[0] + ": " + str(tup[1]))
         message += "**" + tup[0] + ":** " + str(tup[1]) + "\n"
-        #msgs.append(await ctx.channel.send("**" + tup[0] + ":** " + str(tup[1])))
+        #msgs.append(await ctx.send("**" + tup[0] + ":** " + str(tup[1])))
     print("-------  -------")
-    await (await ctx.channel.send(message)).delete(delay=5)
+    await (await ctx.send(message)).delete(delay=5)
     #for msg in msgs:
         #await msg.delete(delay=5)
 
 @bot.command()
 async def fu(ctx):
-    await ctx.channel.send("Once upon a time, Phia thought Savan was fucking with her nickname and changed it to \"FU 7\" (Fuck you Savan).")
+    await ctx.send("Once upon a time, Phia thought Savan was fucking with her nickname and changed it to \"FU 7\" (Fuck you Savan).")
     await asyncio.sleep(1.4)
-    await ctx.channel.send("Savan, wrongfully accused of such egregious misconduct, change his own name to \"FU 2\".")
+    await ctx.send("Savan, wrongfully accused of such egregious misconduct, change his own name to \"FU 2\".")
     await asyncio.sleep(1)
-    await ctx.channel.send("At this point, seeing this, Kemal changed his own name to F4U, an aircraft, because he likes aircraft.")
+    await ctx.send("At this point, seeing this, Kemal changed his own name to F4U, an aircraft, because he likes aircraft.")
     await asyncio.sleep(1.2)
-    await ctx.channel.send("Seeing this forming club, several others decided to join, selecting numbers they liked.")
+    await ctx.send("Seeing this forming club, several others decided to join, selecting numbers they liked.")
     await asyncio.sleep(1)
-    await ctx.channel.send("Some were numerical choices, like -1 and π, others were referencial like 22 to refer to F-22, the best plane.")
+    await ctx.send("Some were numerical choices, like -1 and π, others were referencial like 22 to refer to F-22, the best plane.")
 
 @bot.command()
 async def world(ctx):
     await ctx.message.delete()
     log_com(ctx)
-    await ctx.channel.send(ctx.message.content[7:])
+    await ctx.send(ctx.message.content[7:])
 
 @bot.command()
 async def purgeooc(ctx, limit: int):
-    if not ctx.message.author.permissions_in(ctx.channel).manage_messages:
+    if not ctx.author.permissions_in(ctx.channel).manage_messages:
         log_com(ctx, False)
         return
     log_com(ctx)
@@ -179,7 +174,7 @@ async def purgeooc(ctx, limit: int):
 
 @bot.command()
 async def purgeboomer(ctx, limit: int):
-    if not ctx.message.author.permissions_in(ctx.channel).manage_messages:
+    if not ctx.author.permissions_in(ctx.channel).manage_messages:
         log_com(ctx, False)
         return
     log_com(ctx)
@@ -192,7 +187,7 @@ def is_boomer(msg):
 
 @bot.command()
 async def purgeyui(ctx, limit: int):
-    if not ctx.message.author.permissions_in(ctx.channel).manage_messages:
+    if not ctx.author.permissions_in(ctx.channel).manage_messages:
         log_com(ctx, False)
         return
     log_com(ctx)
@@ -224,7 +219,7 @@ async def doge(ctx):
             new_str += doges[base3[0]] + doges[base3[1]] + doges[base3[2]] + " "
         else:
             new_str += char + " "
-    await ctx.channel.send(new_str)
+    await ctx.send(new_str)
 
 @bot.command()
 async def love(ctx, name: str):
@@ -234,9 +229,9 @@ async def love(ctx, name: str):
         dname = member.display_name
         rname = member.name
         if name_spec in dname.lower() or name_spec in rname.lower():
-            await ctx.channel.send(blurb % (dname, dname))
+            await ctx.send(blurb % (dname, dname))
             return
-    await ctx.channel.send("Error: Probably couldn't find a matching user. Maybe something else, who knows.")
+    await ctx.send("Error: Probably couldn't find a matching user. Maybe something else, who knows.")
 
 def is_boomer(msg):
     return msg.author.id == 280497242714931202
