@@ -6,6 +6,7 @@ from collections import Counter, defaultdict
 import asyncio
 import os
 import sys
+import smbc_parser
 
 description = ""
 
@@ -33,6 +34,24 @@ async def restart(ctx):
 @bot.command()
 async def ping(ctx):
     await ctx.channel.send("pong pong")
+
+def download(img_url):
+    buf = io.BytesIO()
+    buf.name = "graph.png"
+    r = requests.get(img_url, stream = True).raw
+    for chunk in r:
+        buf.write(chunk)
+    buf.seek(0)
+    return buf
+
+@bot.command()
+async def smbc(ctx, *args):
+    arg = " ".join(args)
+    if arg == "latest":
+        title, comic_url, hover_text, after_comic_url = smbc_parser.get_latest()
+    else:
+        title, comic_url, hover_text, after_comic_url = smbc_parser.get_random()
+    # Actually send the file here.
 
 @bot.command()
 async def quote(ctx):
