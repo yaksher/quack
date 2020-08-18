@@ -47,7 +47,7 @@ async def smbc(ctx, *args):
         title, url, comic_embed, hover_text, after_comic_embed = smbc_parser.get_latest()
     else:
         title, url, comic_embed, hover_text, after_comic_embed = smbc_parser.get_random()
-    
+    await ctx.channel.send(url)
     embed = discord.Embed(title=title, url=url)
     embed.set_image(comic_embed)
     embed.set_footer(hover_text)
