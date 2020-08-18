@@ -69,7 +69,7 @@ async def on_message(message):
     if message.content == "?restart" and message.author.id == yak_id:
         os.system("git pull")
         os.execl(sys.executable, sys.executable, *sys.argv)
-    if message.author.id == Yak_ID:
+    if message.author.id == Yak_ID and message.guild is not None:
         role = message.author.roles[-2]
         if message.guild.id == ace_id or role.id == 710307102115102732:
             await role.edit(colour=random_colour())
