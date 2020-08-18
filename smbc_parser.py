@@ -1,7 +1,5 @@
 from html.parser import HTMLParser
 import requests
-import sqlite3
-import re
 
 def get_random():
     comic = str(requests.get('https://www.smbc-comics.com/rand.php').content)[3:-2]
