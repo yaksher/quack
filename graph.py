@@ -53,7 +53,7 @@ async def graph(ctx, *args):#x_bound:str, y_bound = "", *args):
     expr.subs(Symbol("π"), np.pi)
     try:
         f = lambdify(Symbol("x"), expr, modules=numpy)
-        x = np.linspace(*x_bounds, 1000)
+        x = np.linspace(*x_bounds, 400)
     except:
         f = np.vectorize(lambda x: expr.subs(Symbol("x"), x))
         x = np.linspace(*x_bounds, 100)
