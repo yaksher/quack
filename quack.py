@@ -2,7 +2,7 @@ import subprocess
 import sys
 import time
 
-modules = ["fauxclient.py", "base.py", "patrol.py", "graph.py"]
+modules = ["ventbot.py", "base.py", "patrol.py", "graph.py"]
 processes = {}
 try:
     for module in modules:

@@ -55,7 +55,8 @@ async def on_message(message):
     if message.content == "&quote":
         await message.channel.send(requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
     if message.content == "?restart":
-        restart(message.author.id)
+        if "patrolbot".startswith(message.content[9:]):
+            restart(message.author.id)
     if message.author.id == yak_id and message.guild is not None:
         role = message.author.roles[-2]
         if message.guild.id == ace_id or role.id == 710307102115102732:

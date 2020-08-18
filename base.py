@@ -20,8 +20,9 @@ def log_com(ctx, perms=True):
         print("User did not have permissions.")
 
 @bot.command()
-async def restart(ctx):
-    restart_func(ctx.author.id)
+async def restart(ctx, *args):
+    if "basebot".startswith(" ".join(args)):
+        restart_func(ctx.author.id)
 
 @bot.command()
 async def ping(ctx):

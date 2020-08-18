@@ -121,8 +121,9 @@ async def on_message(msg):
                 message_duplicates[msg.id].append(sent_msg)
                 message_duplicates[sent_msg.id].append(msg)
     #print(f"{msg.author} [{msg.guild}/{msg.channel if msg.guild else None}]: {msg.content}")
-    if msg.content == "?restart":
-        restart_func(send_id)
+    if msg.content.startswith("?restart"):
+        if "ventbot".startswith(message.content[9:]):
+            restart_func(send_id)
     global sel_guild
     global sel_channel
     global dm_channel

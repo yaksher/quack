@@ -18,7 +18,8 @@ async def on_ready():
 
 @bot.command()
 async def restart(ctx):
-    restart_func(ctx.author.id)
+    if "graphbot".startswith(" ".join(args)):
+        restart_func(ctx.author.id)
 
 @bot.command()
 async def graph(ctx, *args):#x_bound:str, y_bound = "", *args):
