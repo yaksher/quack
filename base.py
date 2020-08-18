@@ -45,11 +45,10 @@ async def smbc(ctx, *args):
         title, url, comic_embed, hover_text, after_comic_embed = smbc_parser.get_random()
     await ctx.channel.send(url)
     embed = discord.Embed(title=title, url=url)
-    embed.set_image(comic_embed)
-    embed.set_footer(hover_text)
-    embed.set_thumbnail(after_comic_embed)
+    embed.set_image(url=comic_embed)
+    embed.set_footer(text=hover_text)
+    embed.set_thumbnail(url=after_comic_embed)
     await ctx.send(embed=embed)
-    # Actually send the file here.
 
 @bot.command()
 async def quote(ctx):
