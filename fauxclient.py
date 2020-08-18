@@ -11,11 +11,7 @@ TIMEOUT = 30 * 60
 
 @bot.event
 async def on_ready():
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print(sys.argv)
-    print('------')
+    exec(ready)
     while True:
         for channel in subbed:
             if time.time() - session_time[channel.id] > TIMEOUT:

@@ -12,11 +12,7 @@ bot = commands.Bot(command_prefix='?', description=description)
 
 @bot.event
 async def on_ready():
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print(sys.argv)
-    print('------')
+    exec(ready)
 
 def log_com(ctx, perms=True):
     print(f"Command called: \"{ctx.message.content.split(" ")[0]}\" in channel: \"{ctx.channel.name}\" by \"{ctx.author}\"")

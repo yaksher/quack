@@ -14,11 +14,7 @@ transformations = (standard_transformations + (implicit_multiplication_applicati
 
 @bot.event
 async def on_ready():
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print(sys.argv)
-    print('------')
+    exec(ready)
 
 @bot.command()
 async def restart(ctx):
