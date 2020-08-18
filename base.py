@@ -7,6 +7,7 @@ import asyncio
 import os
 import sys
 import smbc_parser
+import io
 
 description = ""
 
