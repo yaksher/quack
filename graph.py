@@ -74,7 +74,7 @@ async def graph(ctx, *args):#x_bound:str, y_bound = "", *args):
         ax.set(ylim=y_bounds)
     ax.plot(x, y)
     ax.spines['left'].set_position(('data', min(max(ax.xlim[0], 0), ax.xlim[1])))
-    ax.spines['bottom'].set_position(('data', min(max(ax.ylim[0], 0), ax.ylim[1]))))
+    ax.spines['bottom'].set_position(('data', min(max(ax.ylim[0], 0), ax.ylim[1])))
     buf = io.BytesIO()
     buf.name = "graph.png"
     fig.savefig(buf, format='png', transparent=True)
