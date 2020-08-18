@@ -2,7 +2,7 @@ from html.parser import HTMLParser
 import requests
 
 '''
-Returns a random SMBC comic represented by a tuple: (title, image source, hovertext, after comic source)
+Returns a random SMBC comic represented by a tuple: (title, url, image source, hovertext, after comic source)
 '''
 def get_random():
     comic = str(requests.get('https://www.smbc-comics.com/rand.php').content)[3:-2]
@@ -10,7 +10,7 @@ def get_random():
     return SMBCParser(comic).parse()
 
 '''
-Returns the latest SMBC comic represented by a tuple: (title, image source, hovertext, after comic source)
+Returns the latest SMBC comic represented by a tuple: (title, url, image source, hovertext, after comic source)
 '''
 def get_latest():
     return SMBCParser('').parse()
@@ -31,9 +31,10 @@ class SMBCParser(HTMLParser):
     Returns the actual components of the comic itself parsed from the page
     '''
     def parse(self):
+        url = f"https://www.smbc-comics.com/comic/{self.current}"
         smbc_page = str(requests.get(f"https://www.smbc-comics.com/comic/{self.current}").content)
         self.feed(smbc_page)
-        return (self.title, self.comic_embed, self.hover_text, self.after_comic_embed)
+        return (self.title, url, self.comic_embed, self.hover_text, self.after_comic_embed)
     
     '''
     Internal function to help parse the webpage

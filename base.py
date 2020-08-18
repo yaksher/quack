@@ -48,9 +48,15 @@ def download(img_url):
 async def smbc(ctx, *args):
     arg = " ".join(args)
     if arg == "latest":
-        title, comic_url, hover_text, after_comic_url = smbc_parser.get_latest()
+        title, url, comic_embed, hover_text, after_comic_embed = smbc_parser.get_latest()
     else:
-        title, comic_url, hover_text, after_comic_url = smbc_parser.get_random()
+        title, url, comic_embed, hover_text, after_comic_embed = smbc_parser.get_random()
+    
+    embed = discord.Embed(title=title, url=url)
+    embed.set_image(comic_embed)
+    embed.set_footer(hover_text)
+    embed.set_thumbnail(after_comic_embed)
+    await ctx.channel.send(embed=embed)
     # Actually send the file here.
 
 @bot.command()
