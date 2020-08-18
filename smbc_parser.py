@@ -31,8 +31,8 @@ class SMBCParser(HTMLParser):
     Returns the actual components of the comic itself parsed from the page
     '''
     def parse(self):
-        url = f"https://www.smbc-comics.com/comic/{self.current}"
-        smbc_page = str(requests.get(f"https://www.smbc-comics.com/comic/{self.current}").content)
+        url = f"https://www.smbc-comics.com/comic/{self.title}"
+        smbc_page = str(requests.get(f"https://www.smbc-comics.com/comic/{self.title}").content)
         self.feed(smbc_page)
         return (self.title, url, self.comic_embed, self.hover_text, self.after_comic_embed)
     
