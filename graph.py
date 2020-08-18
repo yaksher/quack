@@ -66,8 +66,6 @@ async def graph(ctx, *args):#x_bound:str, y_bound = "", *args):
     ax.spines['right'].set_visible(False)#.set_color('white')
     ax.spines['left'].set_color('white')
     ax.spines['bottom'].set_color('white')
-    ax.spines['left'].set_position(('data', 0))
-    ax.spines['bottom'].set_position(('data', 0))
     ax.tick_params(axis='x', colors='white')
     ax.tick_params(axis='y', colors='white')
     ax.grid(True)
@@ -75,6 +73,8 @@ async def graph(ctx, *args):#x_bound:str, y_bound = "", *args):
     if y_bounds is not None:
         ax.set(ylim=y_bounds)
     ax.plot(x, y)
+    ax.spines['left'].set_position(('data', min(max(ax.xlim[0], 0), ax.xlim[1])))
+    ax.spines['bottom'].set_position(('data', min(max(ax.ylim[0], 0), ax.ylim[1]))))
     buf = io.BytesIO()
     buf.name = "graph.png"
     fig.savefig(buf, format='png', transparent=True)
