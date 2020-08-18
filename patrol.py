@@ -56,19 +56,19 @@ async def on_message(message):
         await message.channel.send(requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
     if message.content == "?restart":
         restart(message.author.id)
-    if message.author.id == yak_ID and message.guild is not None:
+    if message.author.id == yak_id and message.guild is not None:
         role = message.author.roles[-2]
         if message.guild.id == ace_id or role.id == 710307102115102732:
             await role.edit(colour=random_colour())
     for user in message.mentions:
-        if user.id == yak_ID:
+        if user.id == yak_id:
             role = user.roles[-2]
             if message.guild.id == ace_id or role.id == 710307102115102732:
                 await role.edit(colour=random_colour())
     content_lower = message.content.lower()
     if re.match(r"(.*yakov.*)|(.*yasha.*)", content_lower):
         for m in message.guild.members:
-            if m.id == yak_ID:
+            if m.id == yak_id:
                 role = m.roles[-2]
                 if message.guild.id == ace_id or role.id == 710307102115102732:
                     await role.edit(colour=random_colour())

@@ -15,7 +15,7 @@ async def on_ready():
     exec(ready)
 
 def log_com(ctx, perms=True):
-    print(f"Command called: \"{ctx.message.content.split(" ")[0]}\" in channel: \"{ctx.channel.name}\" by \"{ctx.author}\"")
+    print(f"Command called: {ctx.message.content} in channel: {ctx.channel.name} by {ctx.author}")
     if not perms:
         print("User did not have permissions.")
 
