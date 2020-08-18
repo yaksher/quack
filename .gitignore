@@ -1,0 +1,53 @@
+maintoken.txt
+Ace Fiction_2020-08-15.txt
+ace_messages.txt
+rp-ooc-rip.txt
+rp-rwby-ooc-rip.txt
+rp-rwby-rip.txt
+rp-sao-rip.txt
+T e c h e r s_2020-08-14-trimmed.txt
+T e c h e r s_2020-08-14.txt
+T e c h e r s_2020-08-15 01:05:42.081705.txt
+T e c h e r s_2020-08-15-trimmed.txt
+T e c h e r s_2020-08-16 00:19:22.202467.txt
+T e c h e r s_2020-08-16 00:33:19.450306.txt
+T e c h e r s_2020-08-16 02:10:03.420901.txt
+T e c h e r s_2020-08-16 02:10:10.086205.txt
+bonk.js
+char_net_1.h5
+CULTECH_2020-08-16 18:49:59.013304.txt
+gpt2_out.txt
+patroltoken.txt
+rick_shiv.json
+wordcounts-031920.txt
+wordcounts.txt
+__pycache__/quack_common.cpython-37.pyc
+__pycache__/smbc_parser.cpython-37.pyc
+checkpoint/.DS_Store
+checkpoint/run1/checkpoint
+checkpoint/run1/counter
+checkpoint/run1/encoder.json
+checkpoint/run1/events.out.tfevents.1594958454.cb865a221552
+checkpoint/run1/hparams.json
+checkpoint/run1/model-1500.data-00000-of-00001
+checkpoint/run1/model-1500.index
+checkpoint/run1/model-1500.meta
+checkpoint/run1/vocab.bpe
+checkpoint/run2/checkpoint
+checkpoint/run2/counter
+checkpoint/run2/encoder.json
+checkpoint/run2/events.out.tfevents.1594966491.cb865a221552
+checkpoint/run2/hparams.json
+checkpoint/run2/model-1000.data-00000-of-00001
+checkpoint/run2/model-1000.index
+checkpoint/run2/model-1000.meta
+checkpoint/run2/vocab.bpe
+checkpoint/run3/checkpoint
+checkpoint/run3/counter
+checkpoint/run3/encoder.json
+checkpoint/run3/events.out.tfevents.1595042882.293324463bcf
+checkpoint/run3/hparams.json
+checkpoint/run3/model-1000.data-00000-of-00001
+checkpoint/run3/model-1000.index
+checkpoint/run3/model-1000.meta
+checkpoint/run3/vocab.bpe
