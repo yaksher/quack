@@ -3,12 +3,26 @@ from collections import Counter, defaultdict
 import asyncio
 import smbc_parser
 import io
+from random import choice
+from gensim.models import KeyedVectors
+from nltk import word_tokenize
+from scipy.spatial import cKDTree
+import numpy as np
+import pickle
 
 from quack_common import *
 
 description = ""
 
 bot = commands.Bot(command_prefix='?', description=description)
+
+comic_vecs = pickle.load(open("comic_vecs.pickle", "rb"))
+comics = [comic for comic in comic_vecs.keys()]
+vecs = [vec for vec in comic_vecs.values()]
+comic_tree = cKDTree(vecs)
+common_words = ["the","be","to","of","and","a","in","that","have","I","it","for","not","on","with","he","as","you","do","at","this","but","his","by","from","they","we","say","her","she"]
+wv = KeyedVectors.load("word2vec.kv", mmap="r")
+shape = wv["and"].shape
 
 @bot.event
 async def on_ready():
@@ -39,9 +53,27 @@ def download(img_url):
 
 @bot.command()
 async def smbc(ctx, *args):
+    def vec(word):
+        if word in common_words:
+            return np.zeros(shape)
+        try:
+            return wv[word.lower()]
+        except KeyError:
+            return np.zeros(shape)
+
+    def norm(vec):
+        n = np.linalg.norm(vec)
+        if n == 0:
+            return vec
+        return vec / n
+    def vector(text):
+        return norm(sum([vec(word) for word in word_tokenize(text)]))
     arg = " ".join(args)
     if arg == "latest":
         title, url, comic_embed, hover_text, after_comic_embed = smbc_parser.get_latest()
+    elif arg.startswith("topical"):
+        dists, indexes = nearby = comic_tree.query(vector(arg[8:]), k = 4)
+        title, url, comic_embed, hover_text, after_comic_embed = smbc_parser.get_comic(comics[choice(indexes)])
     else:
         title, url, comic_embed, hover_text, after_comic_embed = smbc_parser.get_random()
     embed = discord.Embed(title=title, url=url)

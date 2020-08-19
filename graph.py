@@ -17,7 +17,7 @@ async def on_ready():
     exec(ready)
 
 @bot.command()
-async def restart(ctx):
+async def restart(ctx, *args):
     if "graphbot".startswith(" ".join(args)):
         restart_func(ctx.author.id)
 

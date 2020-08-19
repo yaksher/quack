@@ -34,7 +34,7 @@ admin_ids_live = admin_ids[:]
 vent_id = 659559008159531039
 
 def end_session(channel):
-    if channel.recipient.id in admin_ids_bak:
+    if channel.recipient.id in admin_ids:
         admin_ids_live.append(channel.recipient.id)
     session_time.pop(channel.id, None)
     small_ids.pop(channel.id, None)

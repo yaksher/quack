@@ -15,6 +15,13 @@ Returns the latest SMBC comic represented by a tuple: (title, url, image source,
 def get_latest():
     return SMBCParser('').parse()
 
+
+'''
+Returns a specific comic by title.
+'''
+def get_comic(title):
+    return SMBCParser(title).parse()
+
 '''
 Parses SMBC webpage given the name of a comic in the constructor
 '''
