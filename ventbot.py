@@ -117,12 +117,14 @@ async def on_message(msg):
         files = [await attachment.to_file() for attachment in msg.attachments] if len(msg.attachments) > 1 else None
         for channel in subbed:
             if forward[channel.id] and not msg.content.startswith(f"**{small_ids[channel.id]}**"):
-                sent_msg = await channel.send(f"**{msg.author.display_name}** ({msg.author}): {msg.content.replace("***QuackBot*** (QuackBot#9498):", "")}", file = file_, files = files)
+                t1 = "***QuackBot*** (QuackBot#9498):"
+                t2 = ""
+                sent_msg = await channel.send(f"**{msg.author.display_name}** ({msg.author}): {msg.content.replace(t1, t2)}", file = file_, files = files)
                 message_duplicates[msg.id].append(sent_msg)
                 message_duplicates[sent_msg.id].append(msg)
     #print(f"{msg.author} [{msg.guild}/{msg.channel if msg.guild else None}]: {msg.content}")
     if msg.content.startswith("?restart"):
-        if "ventbot".startswith(message.content[9:]):
+        if "ventbot".startswith(msg.content[9:]):
             restart_func(send_id)
     global sel_guild
     global sel_channel
