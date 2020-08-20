@@ -20,7 +20,6 @@ comic_vecs = pickle.load(open("comic_vecs.pickle", "rb"))
 comics = [comic for comic in comic_vecs.keys()]
 vecs = [vec for vec in comic_vecs.values()]
 comic_tree = cKDTree(vecs)
-common_words = ["the","be","to","of","and","a","in","that","have","I","it","for","not","on","with","he","as","you","do","at","this","but","his","by","from","they","we","say","her","she"]
 wv = KeyedVectors.load("word2vec.kv", mmap="r")
 shape = wv["and"].shape
 
@@ -54,8 +53,6 @@ def download(img_url):
 @bot.command()
 async def smbc(ctx, *args):
     def vec(word):
-        if word in common_words:
-            return np.zeros(shape)
         try:
             return wv[word.lower()]
         except KeyError:
