@@ -15,6 +15,32 @@ async def on_ready():
 
 change_TSS = True
 
+REACT_PIN_EMOTE_COUNT = 4
+
+@bot.event
+async def on_raw_reaction_add(payload):
+    print("reaction added")
+    msg = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+    pin_emote = "📌"
+    try:
+        pin_react = next(react for react in msg.reactions if react.emoji == pin_emote)
+        if pin_react.count >= REACT_PIN_EMOTE_COUNT:
+            await msg.pin()
+    except StopIteration:
+        pass
+
+@bot.event
+async def on_raw_reaction_remove(payload):
+    print("reaction removed")
+    msg = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+    pin_emote = "📌"
+    try:
+        pin_react = next(react for react in msg.reactions if react.emoji == pin_emote)
+        if pin_react.count < REACT_PIN_EMOTE_COUNT:
+            await msg.unpin()
+    except StopIteration:
+        await msg.unpin()
+
 @bot.event
 async def on_message(message):
     global change_TSS

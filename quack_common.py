@@ -16,7 +16,7 @@ admin_ids = [yak_id, slav_id]
 ready = """print('Logged in as')
 print(bot.user.name)
 print(bot.user.id)
-print(sys.argv)
+print(" ".join(sys.argv))
 print('------')"""
 
 def restart_func(user_id):
