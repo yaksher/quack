@@ -2,6 +2,7 @@ import requests
 import math as m
 from random import randint
 from random import choice
+from collections import defaultdict
 
 from quack_common import *
 
@@ -17,6 +18,8 @@ change_TSS = True
 
 REACT_PIN_EMOTE_COUNT = 4
 
+previously_pinned = defaultdict(lambda: False)
+
 @bot.event
 async def on_raw_reaction_add(payload):
     print("reaction added")
@@ -24,7 +27,9 @@ async def on_raw_reaction_add(payload):
     pin_emote = "📌"
     try:
         pin_react = next(react for react in msg.reactions if react.emoji == pin_emote)
-        if pin_react.count >= REACT_PIN_EMOTE_COUNT:
+        if pin_react.count < REACT_PIN_EMOTE_COUNT and msg.pinned and not previously_pinned[msg.id]:
+            previously_pinned[msg.id] = True
+        elif pin_react.count >= REACT_PIN_EMOTE_COUNT:
             await msg.pin()
     except StopIteration:
         pass
@@ -36,7 +41,7 @@ async def on_raw_reaction_remove(payload):
     pin_emote = "📌"
     try:
         pin_react = next(react for react in msg.reactions if react.emoji == pin_emote)
-        if pin_react.count < REACT_PIN_EMOTE_COUNT:
+        if pin_react.count < REACT_PIN_EMOTE_COUNT and msg.pinned and not previously_pinned[msg.id]:
             await msg.unpin()
     except StopIteration:
         await msg.unpin()
