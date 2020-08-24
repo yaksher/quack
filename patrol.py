@@ -44,7 +44,8 @@ async def on_raw_reaction_remove(payload):
         if pin_react.count < REACT_PIN_EMOTE_COUNT and msg.pinned and not previously_pinned[msg.id]:
             await msg.unpin()
     except StopIteration:
-        await msg.unpin()
+        if msg.pinned and not previously_pinned[msg.id]:
+            await msg.unpin()
 
 @bot.event
 async def on_message(message):
