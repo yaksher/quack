@@ -47,8 +47,6 @@ async def on_raw_reaction_remove(payload):
 @bot.event
 async def on_message(message):
     global change_TSS
-    if message.guild:
-        print(message.author, message.content)
     if message.guild and message.guild.id == ace_id:
         if is_boomer(message):
             print("Deleted \"ok boomer\" in channel", message.channel)
