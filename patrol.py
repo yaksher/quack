@@ -51,9 +51,6 @@ async def on_message(message):
         if is_boomer(message):
             print("Deleted \"ok boomer\" in channel", message.channel)
             await message.delete()
-        messages = await message.channel.purge(limit=5, check=is_boomer)
-        if messages != []:
-            print(messages, message.channel)
         if is_ooc(message) and message.channel.name != "rp-council":
             print("Moved OOC message from channel", message.channel)
             ooc_channel = next(channel for channel in message.guild.channels if "rp-ooc" == channel.name)

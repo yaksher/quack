@@ -13,6 +13,11 @@ yak_id = 133270838605643776
 slav_id = 193701039633989632
 admin_ids = [yak_id, slav_id]
 
+out_file = open("log_out.txt", "a")
+err_file = open("log_err.txt", "a")
+sys.stdout = out_file
+sys.stderr = err_file
+
 ready = """print('Logged in as')
 print(bot.user.name)
 print(bot.user.id)
