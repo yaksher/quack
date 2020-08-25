@@ -40,6 +40,7 @@ def download(img_url):
 
 @bot.command()
 async def smbc(ctx, *args):
+    log_com(ctx)
     arg = " ".join(args)
     if arg == "latest":
         title, url, comic_embed, hover_text, after_comic_embed = smbc_parser.get_latest()
