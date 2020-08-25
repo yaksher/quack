@@ -2,6 +2,13 @@ import subprocess
 import sys
 import time
 
+out_file = open("log_out.txt", "a")
+err_file = open("log_err.txt", "a")
+
+sys.stdout = out_file
+sys.stderr = err_file
+
+
 modules = ["ventbot.py", "base.py", "patrol.py", "graph.py"]
 processes = {}
 try:
