@@ -85,6 +85,20 @@ async def purge(ctx, limit: int):
     log_com(ctx)
     await ctx.channel.purge(limit=limit)
 
+@bot.command()
+async def purge_imgs(ctx, limit: int):
+    await ctx.message.delete()
+    if not ctx.author.permissions_in(ctx.channel).manage_messages:
+        log_com(ctx, False)
+        return
+    log_com(ctx)
+    def image_only(msg):
+        try:
+            return next(True for attach in msg.attachments if attach.width is not None) and msg.content == ""
+        except StopIteration:
+            return False
+    await ctx.channel.purge(limit=limit, check=image_only)
+
 def is_ooc(msg):
     if msg.author.id == 254044696777588737:
         return msg.content != '' and (msg.content[0] == '(' or msg.content[0] == '<')
