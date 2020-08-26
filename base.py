@@ -3,6 +3,7 @@ from collections import Counter, defaultdict
 import asyncio
 import smbc_parser
 import io
+import json
 from random import choice
 
 from quack_common import *
@@ -28,6 +29,24 @@ async def restart(ctx, *args):
 @bot.command()
 async def ping(ctx):
     await ctx.send("pong pong")
+
+@bot.command()
+async def define(ctx, *args):
+    if ctx.guild.id != ace_id:
+        return
+    query = " ".join(args)
+    url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
+
+    querystring = {"term":query}
+
+    headers = {
+      'x-rapidapi-host': "mashape-community-urban-dictionary.p.rapidapi.com",
+      'x-rapidapi-key': "afa67655ecmsha3053b1b5014159p14e22bjsn5c137658a9fc"
+    }
+
+    response = json.loads(requests.request("GET", url, headers=headers, params=querystring).text)
+    embed = discord.Embed(title=f"Definition of '{query}'", description=response["list"][0]["definition"])
+    await ctx.send(embed=embed)
 
 def download(img_url):
     buf = io.BytesIO()
