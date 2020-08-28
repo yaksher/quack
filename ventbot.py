@@ -56,7 +56,15 @@ def process_msg(msg):
             return bot.get_guild(tech_id).get_member_named(match_str[1:]).mention
         except:
             return match_str
-    return re.sub(r'(@[\w ]+#[0-9]{4})|(@\w+)', replace_ping, emojid_str)
+    pinged_str = re.sub(r'(@[\w ]+#[0-9]{4})|(@\w+)', replace_ping, emojid_str)
+    def replace_channels(match):
+        match_str = match.group()
+        name = match_str[1:]
+        try:
+            return f"<#{next(channel. for channel in sel_guild.channels if channel.name.lower().startswith(name.lower()))}>"
+        except StopIteration:
+            return match_str
+    return re.sub(r'#(w|-)+', replace_channels, pinged_str)
 
 @bot.event
 async def on_reaction_add(reaction, user):
