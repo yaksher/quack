@@ -5,7 +5,8 @@ import os
 
 out_file = open("log_out.txt", "a")
 err_file = open("log_err.txt", "a")
-
+out_file.write("\n\n\n")
+err_file.write("\n\n\n")
 sys.stdout = out_file
 sys.stderr = err_file
 
