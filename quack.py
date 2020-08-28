@@ -28,6 +28,7 @@ try:
                     processes[module].wait()
                     processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
         for module, process in processes.items():
+            log_files[module].flush()
             poll_result = process.poll()
             if poll_result is not None:
                 processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
