@@ -72,3 +72,7 @@ word2vec/word2vec3.pickle
 __pycache__/ProgressBar.cpython-37.pyc
 bonktoken.txt
 SMBC_Full_Text.csv
+base_log.txt
+patrol_log.txt
+ventbot_log.txt
+quack_log.txt

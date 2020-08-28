@@ -3,7 +3,7 @@ import sys
 import time
 import os
 
-log_file = open("quack_log.txt", "a")
+log_file = open("logs/quack_log.txt", "a")
 log_file.write("\n\n\n")
 sys.stdout = log_file
 sys.stderr = log_file
@@ -14,7 +14,7 @@ processes = {}
 log_files = {}
 try:
     for module in modules:
-        log_files[module] = open(f"{module[:-3]}_log.txt", "a")
+        log_files[module] = open(f"logs/{module[:-3]}_log.txt", "a")
         log_files[module].write("\n\n\n")
         processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
     while True:
