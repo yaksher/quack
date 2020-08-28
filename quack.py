@@ -19,6 +19,10 @@ try:
         if "Already up to date." not in pull_attempt:
             print("Pulled something.")
             if sys.argv[0] in pull_attempt:
+                for process in processes.values():
+                    process.terminate()
+                for process in processes.values():
+                    process.wait()
                 os.execl(sys.executable, sys.executable, *sys.argv)
             for module in modules:
                 if module in pull_attempt:
