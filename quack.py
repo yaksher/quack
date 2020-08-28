@@ -5,7 +5,7 @@ import datetime
 import os
 
 
-modules = ["ventbot.py", "base.py", "patrol.py"]#, "graph.py"]
+modules = ["ventbot.py", "base.py", "patrol.py", "bonk.py"]#, "graph.py"]
 processes = {}
 log_files = {}
 try:
