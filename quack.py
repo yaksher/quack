@@ -17,7 +17,7 @@ try:
     for module in modules:
         processes[module] = subprocess.Popen([sys.executable, module])
     while True:
-        pull_attempt = subprocess.check_output(f"git --git-dir={os.path.dirname(os.path.abspath(__file__))} pull", shell=True)
+        pull_attempt = subprocess.check_output(f"git --git-dir={os.path.dirname(os.path.abspath(__file__))}/.git pull", shell=True)
         if "Already up to date." not in pull_attempt:
             if sys.executable in pull_attempt:
                 os.execl(sys.executable, sys.executable, *sys.argv)
