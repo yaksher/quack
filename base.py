@@ -28,7 +28,7 @@ async def restart(ctx, *args):
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send("pong pong")
+    await ctx.send("Autopull successful!")
 
 @bot.command()
 async def define(ctx, *args):
