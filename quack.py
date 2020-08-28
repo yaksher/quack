@@ -3,21 +3,22 @@ import sys
 import time
 import os
 
-out_file = open("log_out.txt", "a")
-err_file = open("log_err.txt", "a")
-out_file.write("\n\n\n")
-err_file.write("\n\n\n")
-sys.stdout = out_file
-sys.stderr = err_file
+log_file = open("quack_log.txt", "a")
+log_file.write("\n\n\n")
+sys.stdout = log_file
+sys.stderr = log_file
 
 
 modules = ["ventbot.py", "base.py", "patrol.py"]#, "graph.py"]
 processes = {}
+log_files = {}
 try:
     for module in modules:
-        processes[module] = subprocess.Popen([sys.executable, module])
+        log_files[module] = open(f"{module[:-3]}_log.txt", "a")
+        log_files[module].write("\n\n\n")
+        processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
     while True:
-        pull_attempt = subprocess.check_output(f"git --git-dir={os.path.dirname(os.path.abspath(__file__))}/.git pull", shell=True)
+        pull_attempt = str(subprocess.check_output(f"git --git-dir={os.path.dirname(os.path.abspath(__file__))}/.git pull", shell=True))
         if "Already up to date." not in pull_attempt:
             if sys.executable in pull_attempt:
                 os.execl(sys.executable, sys.executable, *sys.argv)
@@ -25,11 +26,11 @@ try:
                 if module in pull_attempt:
                     processes[module].terminate()
                     processes[module].wait()
-                    processes[module] = subprocess.Popen([sys.executable, module])
+                    processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
         for module, process in processes.items():
             poll_result = process.poll()
             if poll_result is not None:
-                processes[module] = subprocess.Popen([sys.executable, module])
+                processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
         time.sleep(5)
 except KeyboardInterrupt:
     for process in processes.values():
