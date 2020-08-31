@@ -21,5 +21,4 @@ print('------')"""
 
 def restart_func(user_id):
     if user_id in admin_ids:
-        os.system("git pull")
         os.execl(sys.executable, sys.executable, *sys.argv)
