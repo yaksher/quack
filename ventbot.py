@@ -61,7 +61,7 @@ def process_msg(msg):
         match_str = match.group()
         name = match_str[1:]
         try:
-            return f"<#{next(channel.id for channel in msg.guild.channels if channel.name.lower().startswith(name.lower()))}>"
+            return f"<#{next(channel.id for channel in sel_guild.channels if channel.name.lower().startswith(name.lower()))}>"
         except StopIteration:
             return match_str
     return re.sub(r'#(\w|-)+', replace_channels, pinged_str)
