@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 import requests
+import re
 
 '''
 Returns a random SMBC comic represented by a tuple: (title, url, image source, hovertext, after comic source)
@@ -13,7 +14,13 @@ def get_random():
 Returns the latest SMBC comic represented by a tuple: (title, url, image source, hovertext, after comic source)
 '''
 def get_latest():
-    return SMBCParser('').parse()
+    url = "https://www.smbc-comics.com/comic/"
+    smbc_page = requests.get(url).text
+    # HTML parsing with regex because I'm too lazy to learn to use the HTML parser.
+    tmp = re.search(r'id="permalinktext" type="text" value="http://smbc-comics.com/comic/.+"', smbc_page).group()
+    title = re.search(r'value="http://smbc-comics.com/comic/.+"', tmp).group()[36:-1]
+    print(title)
+    return SMBCParser(title).parse()
 
 
 '''
@@ -39,7 +46,7 @@ class SMBCParser(HTMLParser):
     '''
     def parse(self):
         url = f"https://www.smbc-comics.com/comic/{self.title}"
-        smbc_page = str(requests.get(f"https://www.smbc-comics.com/comic/{self.title}").content)
+        smbc_page = requests.get(url).text
         self.feed(smbc_page)
         return (self.title, url, self.comic_embed, self.hover_text, self.after_comic_embed)
     
@@ -54,5 +61,5 @@ class SMBCParser(HTMLParser):
             self.comic_embed = attrs['src']
             self.hover_text = attrs['title']
         if self.div == 'aftercomic' and tag == 'img':
-            self.after_comic_embed = attrs['src'][2:-2]
+            self.after_comic_embed = attrs['src']
 
