@@ -31,6 +31,16 @@ async def ping(ctx):
     await ctx.send("Autopull successful!")
 
 @bot.command()
+async def ship(ctx, name1, name2):
+    ships = []
+    for i in range(len(name1) - 1):
+        for j in range(len(name2) - 1):
+            if i == j == 0:
+                continue
+            ships.append(name1[:-i]+name2[j:])
+    await ctx.send(", ".join(ships))
+
+@bot.command()
 async def define(ctx, *args):
     if ctx.guild.id != ace_id:
         return
