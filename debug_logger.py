@@ -11,7 +11,7 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     if message.guild or message.author.id == yak_id:
-        print(message.author, message.content)
+        print(f"{message.author} ({message.guild}/{message.channel}): {message.content}")
 
 f = open("maintoken.txt", "r")
 token = f.readlines()[0]
