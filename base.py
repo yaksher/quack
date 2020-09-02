@@ -43,7 +43,7 @@ async def ship(ctx, name1, name2, crazy_case=False):
                 continue
             ships.append(case(name1[:len(name1)-i]+name2[j:]))
             ships.append(case(name2[:len(name2)-j]+name1[i:]))
-    await ctx.send(", ".join(ships))
+    await ctx.send(", ".join(ships[:-4]))
 
 @bot.command()
 async def define(ctx, *args):
