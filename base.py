@@ -37,7 +37,8 @@ async def ship(ctx, name1, name2):
         for j in range(len(name2) - 1):
             if i == j == 0:
                 continue
-            ships.append(name1[:-i]+name2[j:])
+            ships.append(name1[:len(name1)-i]+name2[j:])
+            ships.append(name2[:len(name2)-j]+name1[i:])
     await ctx.send(", ".join(ships))
 
 @bot.command()
