@@ -4,7 +4,7 @@ import asyncio
 import smbc_parser
 import io
 import json
-from random import choice
+from random import choice, randint
 
 from quack_common import *
 
@@ -31,14 +31,18 @@ async def ping(ctx):
     await ctx.send("Autopull successful!")
 
 @bot.command()
-async def ship(ctx, name1, name2):
+async def ship(ctx, name1, name2, crazy_case=False):
     ships = []
-    for i in range(len(name1) - 1):
-        for j in range(len(name2) - 1):
+    def case(string):
+        if not crazy_case:
+            return string
+        return "".join([c.lower() if randint(0,1) else c.upper() for c in string])
+    for i in range(len(name1)):
+        for j in range(len(name2)):
             if i == j == 0:
                 continue
-            ships.append(name1[:len(name1)-i]+name2[j:])
-            ships.append(name2[:len(name2)-j]+name1[i:])
+            ships.append(case(name1[:len(name1)-i]+name2[j:]))
+            ships.append(case(name2[:len(name2)-j]+name1[i:]))
     await ctx.send(", ".join(ships))
 
 @bot.command()
