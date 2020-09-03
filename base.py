@@ -45,10 +45,16 @@ async def ship(ctx, name1, name2, crazy_case=False):
             ships.append(case(name2[:len(name2)-j]+name1[i:]))
     await ctx.send(", ".join(ships[:-4]))
 
+DEFINE_DELETE_EMOJI = "🗑"
+
+@bot.event
+async def on_reaction_add(reaction, user):
+    if reaction.message.author.id == bot.user.id and reaction.emoji == DEFINE_DELETE_EMOJI and reaction.count > 1:
+        if any([user.id == bot.user.id async for user in reaction.users()]):
+            await reaction.message.delete()
+
 @bot.command()
 async def define(ctx, *args):
-    if ctx.guild.id != ace_id:
-        return
     query = " ".join(args)
     url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
 
@@ -61,7 +67,8 @@ async def define(ctx, *args):
 
     response = json.loads(requests.request("GET", url, headers=headers, params=querystring).text)
     embed = discord.Embed(title=f"Definition of '{query}'", description=response["list"][0]["definition"])
-    await ctx.send(embed=embed)
+    msg = await ctx.send(embed=embed)
+    await msg.add_reaction(DEFINE_DELETE_EMOJI)
 
 def download(img_url):
     buf = io.BytesIO()
