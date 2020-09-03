@@ -69,7 +69,8 @@ async def define(ctx, *args):
     }
 
     response = json.loads(requests.request("GET", url, headers=headers, params=querystring).text)
-    embed = discord.Embed(title=f"Definition of '{query}'", description=response["list"][0]["definition"])
+    top = response["list"][0]
+    embed = discord.Embed(title=f"Urban definition of '{query}'", description="{}\n\n\nExample:\n{}".format(top["definition"], top["example"]))
     msg = await ctx.send(embed=embed)
     await msg.add_reaction(DEFINE_DELETE_EMOJI)
 
