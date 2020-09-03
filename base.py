@@ -15,6 +15,8 @@ bot = commands.Bot(command_prefix='?', description=description)
 @bot.event
 async def on_ready():
     exec(ready)
+    global DEFINE_DELETE_EMOJI
+    DEFINE_DELETE_EMOJI = await bot.get_guild(emotes_id).fetch_emoji(DEFINE_DELETE_EMOJI_ID)
 
 def log_com(ctx, perms=True):
     print(f"Command called: {ctx.message.content} in channel: {ctx.channel.name} by {ctx.author}")
@@ -45,6 +47,7 @@ async def ship(ctx, name1, name2, crazy_case=False):
             ships.append(case(name2[:len(name2)-j]+name1[i:]))
     await ctx.send(", ".join(ships[:-4]))
 
+DEFINE_DELETE_EMOJI_ID = 750972459271979038
 DEFINE_DELETE_EMOJI = "🗑"
 
 @bot.event

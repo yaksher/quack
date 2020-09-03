@@ -45,7 +45,7 @@ def process_msg(msg):
     def replace_emoji(match):
         match_str = match.group()
         name = re.sub(r':', '', match_str)
-        for emote in bot.get_guild(659440262422069269).emojis:
+        for emote in bot.get_guild(tech_id).emojis:
             if name == emote.name:
                 return f"<:{emote.name}:{emote.id}>"
         return match_str
