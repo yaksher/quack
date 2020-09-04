@@ -76,11 +76,8 @@ async def define(ctx, *args):
 
 @bot.command()
 async def role_counts(ctx, *args):
-    roles = ctx.guild.roles[::-1]
-    if len(args) != 0:
-        pattern = re.compile(" ".join(args).strip("`"))
-        roles = [role for role in roles if re.match(pattern, role.name)]
-    output = "\n".join(f"{role.name}: {len(role.members)}" for role in roles)
+    pattern = re.compile(" ".join(args).strip("`"))
+    output = "\n".join(sorted(f"{role.name}: {len(role.members)}" for role in ctx.guild.roles if re.match(pattern, role.name), lambda x: len(role.members), True))
     embed = discord.Embed(title=f"Role counts", description=output)
     await ctx.send(embed=embed)
 
