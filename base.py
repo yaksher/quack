@@ -58,6 +58,7 @@ async def on_reaction_add(reaction, user):
 
 @bot.command()
 async def define(ctx, *args):
+    log_com(ctx)
     query = " ".join(args)
     url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
 
@@ -76,8 +77,10 @@ async def define(ctx, *args):
 
 @bot.command()
 async def role_counts(ctx, *args):
+    log_com(ctx)
     pattern = re.compile(" ".join(args).strip("`"))
-    output = "\n".join(sorted(f"{role.name}: {len(role.members)}" for role in ctx.guild.roles if re.match(pattern, role.name), lambda x: len(role.members), True))
+    roles = sorted((role for role in ctx.guild.roles if re.match(pattern, role.name)), key=lambda role: len(role.members), reverse=True)
+    output = "\n".join(f"{role.name}: {len(role.members)}" for role in roles)
     embed = discord.Embed(title=f"Role counts", description=output)
     await ctx.send(embed=embed)
 
