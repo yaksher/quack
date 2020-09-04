@@ -74,6 +74,16 @@ async def define(ctx, *args):
     msg = await ctx.send(embed=embed)
     await msg.add_reaction(DEFINE_DELETE_EMOJI)
 
+@bot.command()
+def role_counts(ctx, *args):
+    roles = ctx.guild.roles[::-1]
+    if len(args) != 0:
+        pattern = re.compile(" ".join(args))
+        roles = [role for role in roles if re.match(pattern, role.name)]
+    output = "\n".join(f"{role.name}: {len(role.members)}" for role in roles)
+    embed = discord.Embed(title=f"Role counts", description=output)
+    await ctx.send(embed=embed)
+
 def download(img_url):
     buf = io.BytesIO()
     buf.name = "graph.png"
