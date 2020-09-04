@@ -75,7 +75,7 @@ async def define(ctx, *args):
     await msg.add_reaction(DEFINE_DELETE_EMOJI)
 
 @bot.command()
-def role_counts(ctx, *args):
+async def role_counts(ctx, *args):
     roles = ctx.guild.roles[::-1]
     if len(args) != 0:
         pattern = re.compile(" ".join(args))
