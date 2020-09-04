@@ -14,8 +14,6 @@ bot = commands.Bot(command_prefix='?', description=description)
 async def on_ready():
     exec(ready)
 
-change_TSS = True
-
 REACT_PIN_EMOTE_COUNT = 4
 pin_emote = "📌"
 
@@ -44,6 +42,8 @@ async def on_raw_reaction_remove(payload):
         if msg.pinned and not previously_pinned[msg.id]:
             await msg.unpin()
 
+change_TSS = True
+
 @bot.event
 async def on_message(message):
     global change_TSS
@@ -51,9 +51,9 @@ async def on_message(message):
         if is_boomer(message):
             print("Deleted \"ok boomer\" in channel", message.channel)
             await message.delete()
-        if is_ooc(message) and message.channel.name != "rp-council":
+        if is_ooc(message):
             print("Moved OOC message from channel", message.channel)
-            ooc_channel = next(channel for channel in message.guild.channels if "rp-ooc" == channel.name)
+            ooc_channel = bot.get_channel(509541675765465108)
             await ooc_channel.send("**[%s] %s:** %s" % (message.channel.name[3:], str(message.author.display_name), trim_ooc(process_pings(message))))
             await message.delete(delay=10)
         TSS_ID = 207642057198534656
@@ -63,7 +63,7 @@ async def on_message(message):
                 get_nick = getNick()
                 await message.author.edit(nick=get_nick[0])
         else:
-            change_TSS == True
+            change_TSS = True
         for user in message.mentions:
             if user.id == TSS_ID:
                 get_nick = getNick()
