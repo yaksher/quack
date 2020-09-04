@@ -1,14 +1,20 @@
-import discord
-import re
+from quack_common import *
+
 import requests
-from discord.ext import commands
 from collections import Counter, defaultdict
-#from random import randint
-import asyncio
 
 description = ""
 
 bot = commands.Bot(command_prefix='?', description=description)
+
+@bot.event
+async def on_ready():
+    exec(ready)
+
+def log_com(ctx, perms=True):
+    print(f"Command called: {ctx.message.content} in channel: {ctx.channel.name} by {ctx.author}")
+    if not perms:
+        print("User did not have permissions.")
 
 @bot.command()
 async def date(ctx, msg_num: int):
@@ -171,6 +177,40 @@ async def servercounts2(ctx):
         print(tup[0] + ": " + str(tup[1]))
     print("-------  -------")"""
 
+from math import ceil
+@bot.command()
+async def emote_counts(ctx):
+    log_com(ctx)
+    if ctx.author.id != yak_id:
+        return
+    emote_counts = {emoji.id: 0 for emoji in ctx.guild.emojis if not emoji.animated}
+    async def download(channel):
+        print(f"started: {channel.name}")
+        try:
+            async for msg in channel.history(limit=None):
+                emoji_strs = re.findall(r'<:\w+:[0-9]{18}>', msg.content)
+                emoji_ids = [int(re.search(r'[0-9]{18}', s).group()) for s in emoji_strs]
+                for emoji_id in emoji_ids:
+                    if emoji_id in emote_counts:
+                        emote_counts[emoji_id] += 1
+        except discord.errors.Forbidden:
+                pass
+        tasks_rem[0] -= 1
+        print(f"finished: {channel.name} | remaining {tasks_rem[0]}")
+    tasks = []
+    tasks_rem = [0]
+    for channel in ctx.guild.channels:
+        if type(channel) is discord.TextChannel:
+            tasks.append(asyncio.create_task(download(channel)))
+    tasks_rem[0] = len(tasks)
+    for task in tasks:
+        await task
+    sorted_ids = sorted(emote_counts.keys(), key=lambda x: emote_counts[x], reverse=True)
+    lines = [f"{next(emoji for emoji in ctx.guild.emojis if emoji.id == emoji_id)}: {emote_counts[emoji_id]}" for emoji_id in sorted_ids]
+    outputs = ["\n".join(lines[i*50:(i+1)*50]) for i in range(ceil(len(lines)/50))]
+    for i, out in enumerate(outputs):
+        embed = discord.Embed(title=f"Emote counts ({i + 1}/{len(outputs)})", description=out)
+        await ctx.send(embed=embed)
 
 f = open("maintoken.txt", "r")
 token = f.readlines()[0]

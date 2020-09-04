@@ -7,7 +7,6 @@ Returns a random SMBC comic represented by a tuple: (title, url, image source, h
 '''
 def get_random():
     comic = str(requests.get('https://www.smbc-comics.com/rand.php').content)[3:-2]
-    print(comic)
     return SMBCParser(comic).parse()
 
 '''
@@ -19,7 +18,6 @@ def get_latest():
     # HTML parsing with regex because I'm too lazy to learn to use the HTML parser.
     tmp = re.search(r'id="permalinktext" type="text" value="http://smbc-comics.com/comic/.+"', smbc_page).group()
     title = re.search(r'value="http://smbc-comics.com/comic/.+"', tmp).group()[36:-1]
-    print(title)
     return SMBCParser(title).parse()
 
 

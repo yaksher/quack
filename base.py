@@ -161,7 +161,6 @@ def process_pings(msg):
                     return "**DELETED**"
     return re.sub(r'<@!*[0-9]*>', replace, msg.content)
 
-
 @bot.command()
 async def moveooc(ctx, limit: int, chnl_name = "rp-ooc"):
     await ctx.message.delete()
@@ -185,7 +184,6 @@ async def move(ctx, limit: int, chnl_name: str):
     ooc_channel = next(channel for channel in ctx.guild.channels if chnl_name == channel.name)
     for msg in msgs:
             await ooc_channel.send("**[%s] %s:** %s" % (ctx.channel.name, str(msg.author.display_name), process_pings(msg)))
-
 
 @bot.command()
 async def wordcounts(ctx, limit = None, ignore_ooc_check = 1):
@@ -298,6 +296,7 @@ async def love(ctx, name: str):
             await ctx.send(blurb % (dname, dname))
             return
     await ctx.send("Error: Probably couldn't find a matching user. Maybe something else, who knows.")
+
 
 def is_boomer(msg):
     return msg.author.id == 280497242714931202
