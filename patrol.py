@@ -59,7 +59,6 @@ async def on_message(msg):
     tasks = TaskManager()
     hell_id = 107490019710615552
     send = msg.channel.send
-    create_task(download(channel))
     if msg.guild and msg.guild.id == ace_id:
         if re.match(r".*clab.*", msg.content.lower()) and msg.author.id == hell_id:
             tasks.dispatch(send, "https://cdn.discordapp.com/attachments/589292970541318185/751616703238242387/Hold_it_thats_mega_cringe-1.mp4")
