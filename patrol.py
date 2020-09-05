@@ -87,8 +87,10 @@ async def on_message(msg):
                 if m.id == TSS_ID:
                     tasks.dispatch(m.edit, nick=tssName(msg.content))
         if is_hal_summon(msg.content):
-            ping = await send("<@!381597229644775425>")
-            await ping.delete()
+            async def summon_hal():
+                ping = await send("<@!381597229644775425>")
+                await ping.delete()
+            tasks.dispatch(summon_hal)
 
     if msg.content == "&quote":
         tasks.dispatch(send, requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
