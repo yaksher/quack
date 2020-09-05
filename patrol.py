@@ -44,59 +44,75 @@ async def on_raw_reaction_remove(payload):
 
 change_TSS = True
 
+class TaskManager:
+    def __init__(self):
+        self.tasks = []
+    def dispatch(self, func, *args, **kwargs):
+        self.tasks.append(asyncio.create_task(func(*args, **kwargs)))
+    async def __call__(self):
+        for task in self.tasks:
+            await task
+
 @bot.event
-async def on_message(message):
+async def on_message(msg):
     global change_TSS
-    if message.guild and message.guild.id == ace_id:
-        if is_boomer(message):
-            print("Deleted \"ok boomer\" in channel", message.channel)
-            await message.delete()
-        if is_ooc(message):
-            print("Moved OOC message from channel", message.channel)
+    tasks = TaskManager()
+    hell_id = 107490019710615552
+    send = msg.channel.send
+    create_task(download(channel))
+    if msg.guild and msg.guild.id == ace_id:
+        if re.match(r".*clab.*", msg.content.lower()) and msg.author.id == hell_id:
+            tasks.dispatch(send, "https://cdn.discordapp.com/attachments/589292970541318185/751616703238242387/Hold_it_thats_mega_cringe-1.mp4")
+        if is_boomer(msg):
+            print("Deleted \"ok boomer\" in channel", msg.channel)
+            tasks.dispatch(msg.delete)
+        if is_ooc(msg):
+            print("Moved OOC msg from channel", msg.channel)
             ooc_channel = bot.get_channel(509541675765465108)
-            await ooc_channel.send("**[%s] %s:** %s" % (message.channel.name[3:], str(message.author.display_name), trim_ooc(process_pings(message))))
-            await message.delete(delay=10)
+            tasks.dispatch(ooc_channel.send, "**[%s] %s:** %s" % (msg.channel.name[3:], str(msg.author.display_name), trim_ooc(process_pings(msg))))
+            tasks.dispatch(msg.delete, delay=10)
         TSS_ID = 207642057198534656
-        if message.author.id == TSS_ID:
+        if msg.author.id == TSS_ID:
             if change_TSS:
                 change_TSS = False
                 get_nick = getNick()
-                await message.author.edit(nick=get_nick[0])
+                tasks.dispatch(msg.author.edit, nick=get_nick[0])
         else:
             change_TSS = True
-        for user in message.mentions:
+        for user in msg.mentions:
             if user.id == TSS_ID:
                 get_nick = getNick()
-                await user.edit(nick=get_nick[0])
-        if tssName(message.content):
-            for m in message.guild.members:
+                tasks.dispatch(user.edit, nick=get_nick[0])
+        if tssName(msg.content):
+            for m in msg.guild.members:
                 if m.id == TSS_ID:
-                    await m.edit(nick=tssName(message.content))
-        if is_hal_summon(message.content):
-            ping = await message.channel.send("<@!381597229644775425>")
+                    tasks.dispatch(m.edit, nick=tssName(msg.content))
+        if is_hal_summon(msg.content):
+            ping = await send("<@!381597229644775425>")
             await ping.delete()
 
-    if message.content == "&quote":
-        await message.channel.send(requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
-    if message.content == "?restart":
-        if "patrolbot".startswith(message.content[9:]):
-            restart(message.author.id)
-    if message.author.id == yak_id and message.guild is not None:
-        role = message.author.roles[-2]
-        if message.guild.id == ace_id or role.id == 710307102115102732:
-            await role.edit(colour=random_colour())
-    for user in message.mentions:
+    if msg.content == "&quote":
+        tasks.dispatch(send, requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
+    if msg.content == "?restart":
+        if "patrolbot".startswith(msg.content[9:]):
+            restart(msg.author.id)
+    if msg.author.id == yak_id and msg.guild is not None:
+        role = msg.author.roles[-2]
+        if msg.guild.id == ace_id or role.id == 710307102115102732:
+            tasks.dispatch(role.edit, colour=random_colour())
+    for user in msg.mentions:
         if user.id == yak_id:
             role = user.roles[-2]
-            if message.guild.id == ace_id or role.id == 710307102115102732:
-                await role.edit(colour=random_colour())
-    content_lower = message.content.lower()
+            if msg.guild.id == ace_id or role.id == 710307102115102732:
+                tasks.dispatch(role.edit, colour=random_colour())
+    content_lower = msg.content.lower()
     if re.match(r"(.*yakov.*)|(.*yasha.*)", content_lower):
-        for m in message.guild.members:
+        for m in msg.guild.members:
             if m.id == yak_id:
                 role = m.roles[-2]
-                if message.guild.id == ace_id or role.id == 710307102115102732:
-                    await role.edit(colour=random_colour())
+                if msg.guild.id == ace_id or role.id == 710307102115102732:
+                    tasks.dispatch(role.edit, colour=random_colour())
+    await tasks()
 
 def random_colour():
     return discord.Colour.from_rgb(randint(0,255),randint(0,255),randint(0,255))
