@@ -300,9 +300,10 @@ async def love(ctx, name: str):
 
 @bot.command()
 async def join_rank(ctx, *args):
+    print(" ".join(args))
     ids = re.findall(r"[0-9]{18}", " ".join(args))
     if ids:
-        search = ctx.guild.get_member(ids[0])
+        search = ctx.guild.get_member(int(ids[0]))
     else:
         search = ctx.guild.get_member_named(" ".join(args))
     await ctx.send(next(i + 1 for i, user in enumerate(sorted(ctx.guild.members, key=lambda x: x.joined_at)) if user.id == search.id))
