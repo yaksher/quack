@@ -302,6 +302,10 @@ async def love(ctx, name: str):
 async def join_rank(ctx, *args):
     await ctx.send(next(i for i, user in enumerate(sorted(ctx.guild.members, key=lambda x: x.joined_at)) if user.name.startswith(" ".join(args))))
 
+@bot.command()
+async def get_rank(ctx, i: int):
+    await ctx.send(str(list(sorted(ctx.guild.members, key=lambda x: x.joined_at))[i]))
+
 def is_boomer(msg):
     return msg.author.id == 280497242714931202
 
