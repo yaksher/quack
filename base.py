@@ -115,6 +115,7 @@ async def quote(ctx):
 @bot.command()
 async def purge(ctx, limit: int):
     await ctx.message.delete()
+    limit = max(limit, 100)
     if not ctx.author.permissions_in(ctx.channel).manage_messages:
         log_com(ctx, False)
         return
