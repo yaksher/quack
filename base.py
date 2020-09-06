@@ -298,6 +298,9 @@ async def love(ctx, name: str):
             return
     await ctx.send("Error: Probably couldn't find a matching user. Maybe something else, who knows.")
 
+@bot.command()
+async def join_rank(ctx, *args):
+    await ctx.send(next(i for i, user in enumerate(sorted(ctx.guild.members, key=lambda x: x.joined_at)) if user.name.startswith(" ".join(args))))
 
 def is_boomer(msg):
     return msg.author.id == 280497242714931202
