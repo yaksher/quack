@@ -28,6 +28,7 @@ async def restart(ctx, *args):
     if "basebot".startswith(" ".join(args)):
         restart_func(ctx.author.id)
 
+from datetime import datetime
 @bot.command()
 async def ping(ctx):
     received = datetime.utcnow().timestamp()
