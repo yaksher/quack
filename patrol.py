@@ -3,6 +3,7 @@ import math as m
 from random import randint
 from random import choice
 from collections import defaultdict
+from datetime import datetime
 
 from quack_common import *
 
@@ -55,6 +56,9 @@ class TaskManager:
 
 @bot.event
 async def on_message(msg):
+    if msg.content == "?ping":
+        received = datetime.utcnow().timestamp()
+        await msg.channel.send("Server to bot: {:.1f}ms\nBot to server: {:.1f}ms".format((received - msg.created_at.timestamp()) * 1000, bot.latency * 1000))
     global change_TSS
     tasks = TaskManager()
     hell_id = 107490019710615552
