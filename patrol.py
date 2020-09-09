@@ -58,7 +58,10 @@ class TaskManager:
 async def on_message(msg):
     if msg.content == "?ping":
         received = datetime.utcnow().timestamp()
-        await msg.channel.send("Server to bot: {:.1f}ms\nBot to server: {:.1f}ms".format((received - msg.created_at.timestamp()) * 1000, bot.latency * 1000))
+        pong1 = "Server to bot: {:.1f}ms".format((received - msg.created_at.timestamp()) * 1000)
+        pong_msg = await msg.channel.send(pong1)
+        pong2 = "{}\nBot to server: {:.1f}ms".format(pong1, (datetime.utcnow().timestamp() - pong_msg.created_at.timestamp()) * 1000)
+        await pong_msg.edit(content=pong2)
     global change_TSS
     tasks = TaskManager()
     hell_id = 107490019710615552
