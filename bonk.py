@@ -54,12 +54,10 @@ def download(img_url):
 from datetime import *
 @bot.event
 async def on_message(msg):
-    if msg.content == "-ping":
-        received = datetime.now()
-        await msg.channel.send(f"User to bot: {(received - msg.created_at).total_seconds() * 1000}ms")
-        await msg.channel.send(f"User to bot to server: {(datetime.now() - msg.created_at).total_seconds() * 1000}ms")
-        await msg.channel.send(f"Bot to server: {bot.latency * 1000}ms")
-        await msg.channel.send(f"User to server: {((received - msg.created_at).total_seconds() - bot.latency) * 1000}ms")
+    if msg.content == ";ping":
+        received = datetime.utcnow().timestamp()
+        await msg.channel.send("Server to bot: {:.1f}ms".format((received - msg.created_at.timestamp()) * 1000))
+        await msg.channel.send("Bot to server: {:.1f}ms".format(bot.latency * 1000))
     msg_lower = msg.content.lower()
     if msg_lower == "restart" and msg.author.id == 735279544524603493:
         os.system("git pull")
