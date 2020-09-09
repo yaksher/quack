@@ -31,8 +31,8 @@ async def restart(ctx, *args):
 @bot.command()
 async def ping(ctx):
     received = datetime.utcnow().timestamp()
-    await msg.channel.send("Server to bot: {:.1f}ms".format((received - msg.created_at.timestamp()) * 1000))
-    await msg.channel.send("Bot to server: {:.1f}ms".format(bot.latency * 1000))
+    await ctx.send("Server to bot: {:.1f}ms".format((received - ctx.message.created_at.timestamp()) * 1000))
+    await ctx.send("Bot to server: {:.1f}ms".format(bot.latency * 1000))
 
 @bot.command()
 async def ship(ctx, name1, name2, crazy_case=False):
