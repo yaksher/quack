@@ -53,6 +53,21 @@ async def on_reaction_add(reaction, user):
             await reaction.message.delete()
 
 @bot.command()
+async def welcome(ctx):
+    if not (ctx.author.guild_permissions.manage_roles or ctx.author.guild_permissions.administrator):
+        log_com(ctx, False)
+        return
+    log_com(ctx)
+    users = ctx.message.mentions
+    role = ctx.author.top_role
+    for user in users:
+        try:
+            await user.edit(roles=user.roles if any(r.id == role.id for r in user.roles) else user.roles + [role])
+        except discord.errors.Forbidden:
+            await ctx.send(f"Do not have required perms to assign {role.name} to {user.display_name}")
+
+
+@bot.command()
 async def define(ctx, *args):
     log_com(ctx)
     query = " ".join(args)
@@ -253,7 +268,7 @@ async def purgeyui(ctx, limit: int):
         return
     log_com(ctx)
     await ctx.message.delete()
-    await ctx.channel.purge(limit=limit, check=is_yui)
+    await ctx.channel.purge(limit=limit, check=lambda msg: msg.author.id == 280497242714931202)
 
 @bot.command()
 async def doge(ctx):
