@@ -23,3 +23,5 @@ print('------')"""
 def restart_func(user_id):
     if user_id in admin_ids:
         os.execl(sys.executable, sys.executable, *sys.argv)
+
+token = open("maintoken.txt", "r").read()

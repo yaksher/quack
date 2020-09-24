@@ -47,7 +47,4 @@ async def xerai(ctx, tokens: int, *args):
         await ctx.channel.send(file=discord.File("gpt2_out.txt"))
     await message.delete()
 
-
-f = open("maintoken.txt", "r")
-token = f.readlines()[0]
 bot.run(token)

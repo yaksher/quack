@@ -196,7 +196,4 @@ async def on_message(msg):
 
 
 
-
-f = open("maintoken.txt", "r")
-token = f.readlines()[0]
 bot.run(token)

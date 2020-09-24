@@ -326,6 +326,4 @@ async def get_rank(ctx, i: int):
 def is_boomer(msg):
     return msg.author.id == 280497242714931202
 
-f = open("maintoken.txt", "r")
-token = f.readlines()[0]
 bot.run(token)

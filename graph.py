@@ -76,6 +76,4 @@ async def graph(ctx, *args):#x_bound:str, y_bound = "", *args):
     buf.seek(0)
     await ctx.send(file=discord.File(buf))
 
-f = open("maintoken.txt", "r")
-token = f.readlines()[0]
 bot.run(token)

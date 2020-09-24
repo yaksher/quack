@@ -245,6 +245,4 @@ def generateNicks(n):
     return nicks
 
 
-f = open("maintoken.txt", "r")
-token = f.readlines()[0]
 bot.run(token)
