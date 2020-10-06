@@ -54,7 +54,7 @@ async def on_reaction_add(reaction, user):
 
 @bot.command()
 async def welcome(ctx):
-    if not ctx.author.guild_permissions.administrator:
+    if not ctx.author.guild_permissions.administrator and not ctx.author.guild_permissions.manage_roles:
         log_com(ctx, False)
         return
     log_com(ctx)
