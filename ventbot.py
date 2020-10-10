@@ -27,8 +27,8 @@ async def on_ready():
     while True:
         for channel in subbed:
             if time.time() - session_time[channel.id] > TIMEOUT:
-                await channel.send("Session timed out. You will get a new ID for your next message.")
-                end_session(channel)
+                await channel.send("Session timed out.")
+                await end_session(channel)
         await asyncio.sleep(TIMEOUT / 3)
 
 
@@ -45,13 +45,14 @@ message_duplicates = defaultdict(lambda: [])
 admin_ids_live = admin_ids[:]
 vent_id = 659559008159531039
 
-def end_session(channel):
+async def end_session(channel):
     if channel.recipient.id in admin_ids:
         admin_ids_live.append(channel.recipient.id)
     session_time.pop(channel.id, None)
-    small_ids.pop(channel.id, None)
+    small_id = small_ids.pop(channel.id, None)
     forward.pop(channel.id, None)
     subbed.remove(channel)
+    await channel.send(f"Session ended. To get the same ID next time, paste `{small_id}::{hashlib.md5(bytes(salt + str(small_id))).hexdigest()[:16]}` before sending your next message.")
 
 def process_msg(msg):
     def replace_emoji(match):
@@ -131,8 +132,7 @@ async def on_message(msg):
             subbed.append(msg.channel)
             await msg.channel.send(f"To stop getting messages from venting and support, type `.silent`. To end your session, type `.end`. Session expires after 30 minutes of inactivity. Your ID is {small_ids[msg.channel.id]}.")
         if msg.content.lower() in [".end", ".unsub"]:
-            end_session(msg.channel)
-            await msg.channel.send("Session ended.")
+            await end_session(msg.channel)
             return
         elif msg.content.lower() in [".stop", ".silent"]:
             forward[msg.channel.id] = False
