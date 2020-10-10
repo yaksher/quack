@@ -118,7 +118,9 @@ async def on_message(msg):
         file_ = await msg.attachments[0].to_file() if len(msg.attachments) == 1 else None
         files = [await attachment.to_file() for attachment in msg.attachments] if len(msg.attachments) > 1 else None
         session_time[msg.channel.id] = time.time()
-        sent_msg = await bot.get_channel(vent_id).send(f"**{small_ids[msg.channel.id]}**: {process_msg(msg)}", file = file_, files = files)
+        t1 = f"***{bot.get_channel(vent_id).guild.me.display_name}*** (QuackBot#9498):"
+        t2 = ""
+        sent_msg = await bot.get_channel(vent_id).send(f"**{small_ids[msg.channel.id]}**: {process_msg(msg).replace(t1, t2)}", file = file_, files = files)
         message_duplicates[sent_msg.id].append(msg)
         message_duplicates[msg.id].append(sent_msg)
         return
