@@ -126,10 +126,12 @@ async def on_message(msg):
     send_id = msg.author.id
     if msg.guild is None and not send_id in admin_ids_live and send_id != bot.user.id and bot.get_guild(tech_id).get_member(send_id) is not None:
         if not msg.channel in subbed:
+            subbed.append(msg.channel)
             small_id = extract_id(msg)
             if small_id is not None:
                 small_ids[msg.channel.id] = small_id
-            subbed.append(msg.channel)
+                await msg.channel.send(f"To stop getting messages from venting and support, type `.silent`. To end your session, type `.end`. Session expires after 30 minutes of inactivity. Your ID is {small_ids[msg.channel.id]}.")
+                return
             await msg.channel.send(f"To stop getting messages from venting and support, type `.silent`. To end your session, type `.end`. Session expires after 30 minutes of inactivity. Your ID is {small_ids[msg.channel.id]}.")
         if msg.content.lower() in [".end", ".unsub"]:
             await end_session(msg.channel)
