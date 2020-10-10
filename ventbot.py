@@ -127,7 +127,7 @@ async def on_message(msg):
         files = [await attachment.to_file() for attachment in msg.attachments] if len(msg.attachments) > 1 else None
         for channel in subbed:
             if forward[channel.id] and not msg.content.startswith(f"**{small_ids[channel.id]}**"):
-                t1 = "***QuackBot*** (QuackBot#9498):"
+                t1 = f"***{msg.channel.guild.me.display_name}*** (QuackBot#9498):"
                 t2 = ""
                 sent_msg = await channel.send(f"**{msg.author.display_name}** ({msg.author}): {msg.content.replace(t1, t2)}", file = file_, files = files)
                 message_duplicates[msg.id].append(sent_msg)
