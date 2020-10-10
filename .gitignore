@@ -76,3 +76,8 @@ base_log.txt
 patrol_log.txt
 ventbot_log.txt
 quack_log.txt
+__pycache__/smbc_parser.cpython-38.pyc
+__pycache__/quack_common.cpython-38.pyc
+logs/bonk_log.txt
+.DS_Store
+.DS_Store
