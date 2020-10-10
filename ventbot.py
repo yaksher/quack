@@ -120,6 +120,7 @@ async def on_message(msg):
         session_time[msg.channel.id] = time.time()
         t1 = f"***{bot.get_channel(vent_id).guild.me.display_name}*** (QuackBot#9498):"
         t2 = ""
+        print(t1, msg.content)
         sent_msg = await bot.get_channel(vent_id).send(f"**{small_ids[msg.channel.id]}**: {process_msg(msg).replace(t1, t2)}", file = file_, files = files)
         message_duplicates[sent_msg.id].append(msg)
         message_duplicates[msg.id].append(sent_msg)
