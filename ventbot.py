@@ -57,12 +57,14 @@ def process_msg(msg):
         except:
             return match_str
     pinged_str = re.sub(r'(@[\w ]+#[0-9]{4})|(@\w+)', replace_ping, emojid_str)
+    if pinged_str.startswith("> "):
+        pinged_str = "\n" + pinged_str
     def replace_channels(match):
         match_str = match.group()
         name = match_str[1:]
         try:
             return f"<#{next(channel.id for channel in sel_guild.channels if channel.name.lower().startswith(name.lower()))}>"
-        except StopIteration:
+        except (StopIteration, AttributeError):
             return match_str
     return re.sub(r'#(\w|-)+', replace_channels, pinged_str)
 

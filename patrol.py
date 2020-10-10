@@ -115,11 +115,12 @@ async def on_message(msg):
                 tasks.dispatch(role.edit, colour=random_colour())
     content_lower = msg.content.lower()
     if re.match(r"(.*yakov.*)|(.*yasha.*)", content_lower):
-        for m in msg.guild.members:
-            if m.id == yak_id:
-                role = m.roles[-2]
-                if msg.guild.id == ace_id or role.id == 710307102115102732:
-                    tasks.dispatch(role.edit, colour=random_colour())
+        if msg.guild is not None:
+            for m in msg.guild.members:
+                if m.id == yak_id:
+                    role = m.roles[-2]
+                    if msg.guild.id == ace_id or role.id == 710307102115102732:
+                        tasks.dispatch(role.edit, colour=random_colour())
     await tasks()
 
 def random_colour():

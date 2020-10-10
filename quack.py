@@ -30,7 +30,6 @@ try:
                     processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
         for module, process in processes.items():
             log_files[module].flush()
-            print(module)
             poll_result = process.poll()
             if poll_result is not None:
                 print(f"launching {module} again")
