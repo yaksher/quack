@@ -1,4 +1,6 @@
 from random import randint
+from random import choice
+import hashlib
 from collections import defaultdict
 
 from quack_common import *
@@ -9,9 +11,19 @@ bot = commands.Bot(command_prefix='?', description=description)
 
 TIMEOUT = 30 * 60
 
+salt = None
+
 @bot.event
 async def on_ready():
+    global salt
     exec(ready)
+    try:
+        salt = open("vent_salt.txt", "r").read()
+    except FileNotFoundError:
+        salt_f = open("vent_salt.txt", "w")
+        salt = "".join(choice("abcdefghiklmnopqrstuvwxyz0123456789") for _ in range(10))
+        salt_f.write(salt)
+        salt_f.close()
     while True:
         for channel in subbed:
             if time.time() - session_time[channel.id] > TIMEOUT:
@@ -96,11 +108,26 @@ async def on_message_edit(before, after):
         except discord.errors.Forbidden:
             pass
 
+def extract_id(msg):
+    idhash = msg.content.split("::")
+    try:
+        if 0 <= int(idhash[0]) < 1000:
+            hash_str = hashlib.md5(bytes(salt + idhash[0])).hexdigest()[:16]
+            if idhash[1] == hash_str:
+                return int(idhash[0])
+    except ValueError:
+        pass
+    return None
+
+
 @bot.event
 async def on_message(msg):
     send_id = msg.author.id
     if msg.guild is None and not send_id in admin_ids_live and send_id != bot.user.id and bot.get_guild(tech_id).get_member(send_id) is not None:
         if not msg.channel in subbed:
+            small_id = extract_id(msg)
+            if small_id is not None:
+                small_ids[msg.channel.id] = small_id
             subbed.append(msg.channel)
             await msg.channel.send(f"To stop getting messages from venting and support, type `.silent`. To end your session, type `.end`. Session expires after 30 minutes of inactivity. Your ID is {small_ids[msg.channel.id]}.")
         if msg.content.lower() in [".end", ".unsub"]:
