@@ -52,7 +52,7 @@ async def end_session(channel):
     small_id = small_ids.pop(channel.id, None)
     forward.pop(channel.id, None)
     subbed.remove(channel)
-    await channel.send(f"Session ended. To get the same ID next time, paste `{small_id}::{hashlib.md5(bytes(salt + str(small_id))).hexdigest()[:16]}` before sending your next message.")
+    await channel.send(f"Session ended. To get the same ID next time, paste `{small_id}::{hashlib.md5((salt + str(small_id)).encode()).hexdigest()[:16]}` before sending your next message.")
 
 def process_msg(msg):
     def replace_emoji(match):
@@ -113,7 +113,7 @@ def extract_id(msg):
     idhash = msg.content.split("::")
     try:
         if 0 <= int(idhash[0]) < 1000:
-            hash_str = hashlib.md5(bytes(salt + idhash[0])).hexdigest()[:16]
+            hash_str = hashlib.md5((salt + idhash[0]).encode()).hexdigest()[:16]
             if idhash[1] == hash_str:
                 return int(idhash[0])
     except ValueError:
