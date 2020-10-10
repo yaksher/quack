@@ -118,9 +118,8 @@ async def on_message(msg):
         file_ = await msg.attachments[0].to_file() if len(msg.attachments) == 1 else None
         files = [await attachment.to_file() for attachment in msg.attachments] if len(msg.attachments) > 1 else None
         session_time[msg.channel.id] = time.time()
-        t1 = f"***{bot.get_channel(vent_id).guild.me.display_name}*** (QuackBot#9498):"
+        t1 = f"**{bot.get_channel(vent_id).guild.me.display_name}** (QuackBot#9498):"
         t2 = ""
-        print(t1, msg.content)
         sent_msg = await bot.get_channel(vent_id).send(f"**{small_ids[msg.channel.id]}**: {process_msg(msg).replace(t1, t2)}", file = file_, files = files)
         message_duplicates[sent_msg.id].append(msg)
         message_duplicates[msg.id].append(sent_msg)
@@ -130,7 +129,7 @@ async def on_message(msg):
         files = [await attachment.to_file() for attachment in msg.attachments] if len(msg.attachments) > 1 else None
         for channel in subbed:
             if forward[channel.id] and not msg.content.startswith(f"**{small_ids[channel.id]}**"):
-                t1 = f"***{msg.channel.guild.me.display_name}*** (QuackBot#9498):"
+                t1 = f"**{msg.channel.guild.me.display_name}** (QuackBot#9498):"
                 t2 = ""
                 sent_msg = await channel.send(f"**{msg.author.display_name}** ({msg.author}): {msg.content.replace(t1, t2)}", file = file_, files = files)
                 message_duplicates[msg.id].append(sent_msg)
