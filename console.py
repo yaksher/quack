@@ -33,10 +33,10 @@ async def on_ready():
                     except SyntaxError:
                         pass
                 exec(code)
+                for task in tasks:
+                    await task
             except:
                 traceback.print_exc()
-            for task in tasks:
-                await task
     except EOFError:
         exit(0)
 

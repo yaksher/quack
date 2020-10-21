@@ -22,6 +22,8 @@ previously_pinned = defaultdict(lambda: False)
 
 @bot.event
 async def on_raw_reaction_add(payload):
+    if payload.emoji != pin_emote:
+        return
     msg = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
     try:
         pin_react = next(react for react in msg.reactions if react.emoji == pin_emote)
@@ -34,6 +36,8 @@ async def on_raw_reaction_add(payload):
 
 @bot.event
 async def on_raw_reaction_remove(payload):
+    if payload.emoji != pin_emote:
+        return
     msg = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
     try:
         pin_react = next(react for react in msg.reactions if react.emoji == pin_emote)
@@ -103,7 +107,7 @@ async def on_message(msg):
         tasks.dispatch(send, requests.get('https://inspirobot.me/api', params={"generate": "true"}).text)
     if msg.content == "?restart":
         if "patrolbot".startswith(msg.content[9:]):
-            restart(msg.author.id)
+            restart_func(msg.author.id)
     if msg.author.id == yak_id and msg.guild is not None:
         role = msg.author.roles[-2]
         if msg.guild.id == ace_id or role.id == 710307102115102732:
