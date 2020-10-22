@@ -73,6 +73,8 @@ async def on_message(msg):
     if msg.guild and msg.guild.id == ace_id:
         if re.match(r".*clab.*", msg.content.lower()) and msg.author.id == hell_id:
             tasks.dispatch(send, "https://cdn.discordapp.com/attachments/589292970541318185/751616703238242387/Hold_it_thats_mega_cringe-1.mp4")
+        if msg.author.id == hell_id:
+            await msg.channel.send("https://media.discordyui.net/reactions/cringe/TckMPQU.jpg")
         if is_boomer(msg):
             print("Deleted \"ok boomer\" in channel", msg.channel)
             tasks.dispatch(msg.delete)
