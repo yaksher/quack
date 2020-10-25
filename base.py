@@ -60,11 +60,18 @@ async def welcome(ctx):
     log_com(ctx)
     users = ctx.message.mentions
     role = ctx.author.top_role
+    welcomed = []
     for user in users:
         try:
             await user.edit(roles=user.roles if any(r.id == role.id for r in user.roles) else user.roles + [role])
+            welcomed.append(user)
         except discord.errors.Forbidden:
             await ctx.send(f"Do not have required perms to assign {role.name} to {user.display_name}")
+    if welcomed:
+        users_str = "**" + "**, **".join(str(user) for user in welcomed) + "**"
+        await ctx.send(f"Welcomed {users_str} with role {role.name}")
+    else:
+        await ctx.send(f"Nobody welcomed.")
 
 
 @bot.command()
