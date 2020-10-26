@@ -129,7 +129,7 @@ async def on_message(msg):
     if msg.guild is None and not send_id in admin_ids_live and send_id != bot.user.id and bot.get_guild(tech_id).get_member(send_id) is not None:
         if not msg.channel in subbed:
             if time.time() - cooldown[msg.channel.id] < 30:
-                await msg.channel.send(f"Please wait {int(time.time() - cooldown[msg.channel.id])} seconds.")
+                await msg.channel.send(f"Please wait {int(30 - time.time() + cooldown[msg.channel.id])} seconds.")
                 return
             subbed.append(msg.channel)
             small_id = extract_id(msg)
