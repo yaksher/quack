@@ -37,6 +37,7 @@ sel_channel = None
 dm_channel = None
 
 subbed = []
+cooldown = defaultdict(lambda: 0)
 session_time = defaultdict(lambda: time.time())
 forward = defaultdict(lambda: True)
 small_ids = defaultdict(lambda: randint(0, 999))
@@ -52,7 +53,8 @@ async def end_session(channel):
     small_id = small_ids.pop(channel.id, None)
     forward.pop(channel.id, None)
     subbed.remove(channel)
-    await channel.send(f"Session ended. To get the same ID next time, paste `{small_id}::{hashlib.md5((salt + str(small_id)).encode()).hexdigest()[:16]}` before sending your next message.")
+    cooldown[channel.id] = time.time()
+    await channel.send(f"Session ended. Please wait 30 seconds to start a new one. To get the same ID next time, paste `{small_id}::{hashlib.md5((salt + str(small_id)).encode()).hexdigest()[:16]}` before sending your next message.")
 
 def process_msg(msg):
     def replace_emoji(match):
@@ -126,6 +128,9 @@ async def on_message(msg):
     send_id = msg.author.id
     if msg.guild is None and not send_id in admin_ids_live and send_id != bot.user.id and bot.get_guild(tech_id).get_member(send_id) is not None:
         if not msg.channel in subbed:
+            if time.time() - cooldown[msg.channel.id] < 30:
+                await msg.channel.send(f"Please wait {int(time.time() - cooldown[msg.channel.id])} seconds.")
+                return
             subbed.append(msg.channel)
             small_id = extract_id(msg)
             if small_id is not None:
