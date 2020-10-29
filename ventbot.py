@@ -16,6 +16,8 @@ salt = None
 @bot.event
 async def on_ready():
     global salt
+    global vent_channel
+    vent_channel = bot.get_channel(vent_id)
     exec(ready)
     try:
         salt = open("vent_salt.txt", "r").read()
@@ -45,6 +47,7 @@ message_duplicates = defaultdict(lambda: [])
 
 admin_ids_live = admin_ids[:]
 vent_id = 659559008159531039
+vent_channel = None
 
 async def end_session(channel):
     if channel.recipient.id in admin_ids:
@@ -126,8 +129,8 @@ def extract_id(msg):
 @bot.event
 async def on_message(msg):
     send_id = msg.author.id
-    if msg.guild is None and not send_id in admin_ids_live and send_id != bot.user.id and bot.get_guild(tech_id).get_member(send_id) is not None:
-        if not msg.channel in subbed:
+    if msg.guild is None and send_id != bot.user.id and send_id not in admin_ids_live:# and bot.get_guild(tech_id).get_member(send_id) is not None:
+        if msg.channel not in subbed:
             if time.time() - cooldown[msg.channel.id] < 30:
                 await msg.channel.send(f"Please wait {int(30 - time.time() + cooldown[msg.channel.id])} seconds.")
                 return
@@ -152,9 +155,9 @@ async def on_message(msg):
         file_ = await msg.attachments[0].to_file() if len(msg.attachments) == 1 else None
         files = [await attachment.to_file() for attachment in msg.attachments] if len(msg.attachments) > 1 else None
         session_time[msg.channel.id] = time.time()
-        t1 = f"**{bot.get_channel(vent_id).guild.me.display_name}** (QuackBot#9498): "
+        t1 = f"**{vent_channel.guild.me.display_name}** (QuackBot#9498): "
         t2 = ""
-        sent_msg = await bot.get_channel(vent_id).send(f"**{small_ids[msg.channel.id]}**: {process_msg(msg).replace(t1, t2)}", file = file_, files = files)
+        sent_msg = await vent_channel.send(f"**{small_ids[msg.channel.id]}**: {process_msg(msg).replace(t1, t2)}", file = file_, files = files)
         message_duplicates[sent_msg.id].append(msg)
         message_duplicates[msg.id].append(sent_msg)
         return

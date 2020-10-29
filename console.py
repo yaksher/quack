@@ -14,15 +14,22 @@ readline.parse_and_bind('set editing-mode vi')
 readline.parse_and_bind('tab: tab-insert')
 bot = commands.Bot(command_prefix='?', description="")
 
+tasks = []
+
 @bot.event
 async def on_ready():
+    global tasks
+    print("Ready")
     def get_in(indent=False):
         line = input("... " if indent else ">>> ")
-        return line + "\n" + get_in(True) if line.endswith(":") else line
+        return line + "\n" + get_in(True) if line.endswith(":") or (indent and line != "") else line
     def wait(func):
+        global tasks
         tasks.append(asyncio.create_task(func))
     try:
         while True:
+            for task in tasks:
+                await task
             code = get_in()
             tasks = []
             try:
@@ -33,8 +40,6 @@ async def on_ready():
                     except SyntaxError:
                         pass
                 exec(code)
-                for task in tasks:
-                    await task
             except:
                 traceback.print_exc()
     except EOFError:
