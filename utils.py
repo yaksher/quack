@@ -193,6 +193,9 @@ async def emote_counts(ctx):
                 for emoji_id in emoji_ids:
                     if emoji_id in emote_counts:
                         emote_counts[emoji_id] += 1
+                for react in msg.reactions:
+                    if type(react.emoji) is not str and react.emoji.id in emote_counts:
+                        emote_counts[react.emoji.id] += react.count
         except discord.errors.Forbidden:
                 pass
         tasks_rem[0] -= 1
