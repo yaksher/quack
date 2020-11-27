@@ -52,6 +52,15 @@ def download(img_url):
     buf.seek(0)
     return buf
 
+def get_file(img_url):
+    file_name = "imgs/" + img_url.replace("https://", "").replace("/", "_")
+    if os.path.isfile(file_name):
+        return open(file_name, "rb")
+    f = open(file_name, "wb")
+    f.write(download(img_url).getbuffer())
+    f.close()
+    return open(file_name, "rb")
+
 from datetime import *
 @bot.event
 async def on_message(msg):
@@ -72,7 +81,7 @@ async def on_message(msg):
     ping = ping.group(0)
     if "hug" in msg_lower:
         img_url = choice(hugPics)
-        img = discord.File(download(img_url))
+        img = discord.File(get_file(img_url))
         await msg.channel.send(f"{msg.author.mention} has sent a hug to {ping}!", file = img)
         return
     if "hard" in msg_lower:
@@ -97,7 +106,7 @@ async def on_message(msg):
         bonktype = "bonk"
     if bonktype is None:
         return
-    img = discord.File(download(img_url))
+    img = discord.File(get_file(img_url))
     hard_str = " hard" if hard else ""
     if "438821323959959562" in ping:
         await msg.channel.send(f"{msg.author.mention} tries to {bonktype} {ping}{hard_str}\nYou have {bonktype}ed the creator, so in return, <@!438821323959959562> {bonktype}s {msg.author.mention}.", file=img)
