@@ -31,7 +31,8 @@ pref_file = "preferences.pickle"
 
 class QuackPrefs:
     def __init__(self, save_filename):
-        self.save_filename = save_filename 
+        self.save_filename = save_filename
+        self.last_updated = time.time()
         self.load()
 
     def set_prefs(self, guild_id, prefs):
@@ -45,14 +46,14 @@ class QuackPrefs:
         self.load_checked()
         if guild_id not in self.guilds:
             self.guilds[guild_id] = {}
-        self.guilds[guild_id].update(prefs)
+        self.guilds[guild_id] = prefs
         self.save()
 
     def get_pref(self, guild_id, pref):
         self.load_checked()
-        if guild_id not in self.guilds or pref not in self.guilds["pref"]:
+        if guild_id not in self.guilds or pref not in self.guilds[guild_id]:
             return None
-        return self.guilds[guild_id]["pref"]
+        return self.guilds[guild_id][pref]
 
     def __getitem__(self, guild_id):
         self.load_checked()
@@ -63,15 +64,23 @@ class QuackPrefs:
             def __init__(self, parent, guild_id):
                 self.prefs = parent.guilds[guild_id]
                 self.parent = parent
+                self.guild_id = guild_id
             def __setitem__(self, pref, val):
-                parent.load_checked()
+                self.parent.load_checked()
                 self.prefs[pref] = val
-                parent.save()
+                self.parent.save()
             def __getitem__(self, pref):
-                parent.load_checked()
+                self.parent.load_checked()
                 if pref not in self.prefs:
                     return None
                 return self.prefs[pref]
+            def update(self, prefs):
+                self.parent.load_checked()
+                self.prefs.update(prefs)
+                self.parent.save()
+            def __iadd__(self, prefs):
+                self.update(prefs)
+                return self.parent.guilds[self.guild_id]
 
         return GetRetObject(self, guild_id)
 
