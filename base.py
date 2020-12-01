@@ -334,7 +334,7 @@ def is_boomer(msg):
     return msg.author.id == 280497242714931202
 
 @bot.command()
-async def set_pinboard(ctx, emote_count, channel_id = 0):
+async def set_pinboard(ctx, emote_count: int, channel_id = 0):
     if channel_id == -1:
         prefs.set_prefs(ctx.guild.id, {"pinboard": None, "emote_count": 0})
         await ctx.send(f"Unset pinboard channel for {ctx.guild}.")
@@ -342,6 +342,6 @@ async def set_pinboard(ctx, emote_count, channel_id = 0):
         if channel_id == 0:
             channel_id = ctx.channel.id
         prefs.set_prefs(ctx.guild.id, {"pinboard": channel_id, "emote_count": emote_count})
-        await ctx.send(f"Set pinboard channel for {ctx.guild} to {bot.get_channel(channel_id)} with min emotes {emote_count}.")
+        await bot.get_channel(prefs.guilds[ctx.guild.id]["pinboard"]).send(f"Set pinboard channel for {ctx.guild} to this channel with min emotes {emote_count}.")
 
 bot.run(token)

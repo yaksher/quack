@@ -15,7 +15,7 @@ bot = commands.Bot(command_prefix='?', description=description)
 async def on_ready():
     exec(ready)
 
-REACT_PIN_EMOTE_COUNT = 4
+REACT_PIN_EMOTE_COUNT = 1
 pin_emote = "📌"
 pinboard_emote = "⭐"
 
@@ -23,23 +23,24 @@ previously_pinned = defaultdict(lambda: False)
 
 @bot.event
 async def on_raw_reaction_add(payload):
-    if payload.emoji == pin_emote:
+    print(payload, payload.emoji)
+    if payload.emoji.name == pin_emote:
         msg = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
         try:
-            pin_react = next(react for react in msg.reactions if react.emoji == pin_emote)
-            if pin_react.count < REACT_PIN_EMOTE_COUNT and msg.pinned and not previously_pinned[msg.id]:
+            react = next(react for react in msg.reactions if react.emoji == pin_emote)
+            if react.count < REACT_PIN_EMOTE_COUNT and msg.pinned and not previously_pinned[msg.id]:
                 previously_pinned[msg.id] = True
-            elif pin_react.count >= REACT_PIN_EMOTE_COUNT:
+            elif react.count >= REACT_PIN_EMOTE_COUNT:
                 await msg.pin()
         except StopIteration:
             pass
-    if payload.emoji == pinboard_emote:
+    elif payload.emoji.name == pinboard_emote:
+        msg = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
         if "pinboard" not in prefs.guilds[msg.guild.id] or prefs.guilds[msg.guild.id]["pinboard"] is None:
             return
-        msg = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
         try:
-            pin_react = next(react for react in msg.reactions if react.emoji == pin_emote)
-            if pin_react.count >= prefs.guilds[msg.guild.id]["emote_count"]:
+            react = next(react for react in msg.reactions if react.emoji == pinboard_emote)
+            if react.count >= prefs.guilds[msg.guild.id]["emote_count"]:
                 await pinboard(msg)
         except StopIteration:
             pass
@@ -59,8 +60,8 @@ async def on_raw_reaction_remove(payload):
         return
     msg = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
     try:
-        pin_react = next(react for react in msg.reactions if react.emoji == pin_emote)
-        if pin_react.count < REACT_PIN_EMOTE_COUNT and msg.pinned and not previously_pinned[msg.id]:
+        react = next(react for react in msg.reactions if react.emoji == pin_emote)
+        if react.count < REACT_PIN_EMOTE_COUNT and msg.pinned and not previously_pinned[msg.id]:
             await msg.unpin()
     except StopIteration:
         if msg.pinned and not previously_pinned[msg.id]:
