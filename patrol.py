@@ -15,7 +15,7 @@ bot = commands.Bot(command_prefix='?', description=description)
 async def on_ready():
     exec(ready)
 
-REACT_PIN_EMOTE_COUNT = 1
+REACT_PIN_EMOTE_COUNT = 4
 pin_emote = "📌"
 pinboard_emote = "⭐"
 
