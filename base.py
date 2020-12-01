@@ -333,4 +333,13 @@ async def get_rank(ctx, i: int):
 def is_boomer(msg):
     return msg.author.id == 280497242714931202
 
+@bot.command()
+async def set_pinboard(ctx, emote_count, channel_id = 0):
+    if channel_id == -1:
+        prefs.set_prefs(ctx.guild.id, {"pinboard": None, "emote_count": 0})
+    elif channel_id == 0:
+        prefs.set_prefs(ctx.guild.id, {"pinboard": ctx.channel.id, "emote_count": emote_count})
+    else:
+        prefs.set_prefs(ctx.guild.id, {"pinboard": channel_id, "emote_count": emote_count})
+
 bot.run(token)
