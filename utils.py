@@ -215,6 +215,57 @@ async def emote_counts(ctx):
         embed = discord.Embed(title=f"Emote counts ({i + 1}/{len(outputs)})", description=out)
         await ctx.send(embed=embed)
 
+class TaskManager:
+    def __init__(self):
+        self.tasks = []
+    def dispatch(self, task):
+        self.tasks.append(asyncio.create_task(task))
+    async def __call__(self):
+        for task in self.tasks:
+            await task
+
+@bot.command()
+async def recover_starboard(ctx):
+    log_com(ctx)
+    if ctx.author.id != yak_id:
+        return
+
+    async def pinboard(msg):
+        pinboard_channel = bot.get_channel(prefs.guilds[msg.guild.id]["pinboard"])
+        embed = discord.Embed(description=f"{msg.content}\n\n\nhttps://discord.com/channels/{msg.guild.id}/{msg.channel.id}/{msg.id}")
+        embed.set_author(name=f"{msg.author.name} in {msg.channel}", icon_url=msg.author.avatar_url)
+        if len(msg.attachments) != 0:
+            embed.set_image(url=msg.attachments[0].url)
+        await pinboard_channel.send(embed=embed)
+    async def download(channel):
+        print(f"started: {channel.name}")
+        try:
+            tasks = TaskManager()
+            async for msg in channel.history(limit=None, oldest_first=True):
+                for react in msg.reactions:
+                    if react.emoji == "🌟":
+                        tasks.dispatch(pinboard(msg))
+                        break
+            await tasks()
+        except discord.errors.Forbidden:
+                pass
+        tasks_rem[0] -= 1
+        print(f"finished: {channel.name} | remaining {tasks_rem[0]}")
+    tasks_rem = [0]
+    downloads = TaskManager()
+    for channel in ctx.guild.channels:
+        if type(channel) is discord.TextChannel:
+            downloads.dispatch(download(channel))
+    tasks_rem[0] = len(downloads.tasks)
+    await downloads()
+    sorted_ids = sorted(emote_counts.keys(), key=lambda x: emote_counts[x], reverse=True)
+    lines = [f"{next(emoji for emoji in ctx.guild.emojis if emoji.id == emoji_id)}: {emote_counts[emoji_id]}" for emoji_id in sorted_ids]
+    outputs = ["\n".join(lines[i*50:(i+1)*50]) for i in range(ceil(len(lines)/50))]
+    for i, out in enumerate(outputs):
+        embed = discord.Embed(title=f"Emote counts ({i + 1}/{len(outputs)})", description=out)
+        await ctx.send(embed=embed)
+
+
 f = open("maintoken.txt", "r")
 token = f.readlines()[0]
 bot.run(token)

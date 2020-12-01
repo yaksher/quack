@@ -25,8 +25,8 @@ previously_pinned = defaultdict(lambda: False)
 async def on_raw_reaction_add(payload):
     async def pinboard(msg):
         pinboard_channel = bot.get_channel(prefs.guilds[msg.guild.id]["pinboard"])
-        embed = discord.Embed(description=f"{msg.content}\n\n\nhttps://discord.com/channels/{msg.guild.id}/{msg.channel.id}/{msg.id}")
-        embed.set_author(name=f"{msg.author.name} in {msg.channel}", icon_url=msg.author.avatar_url)
+        embed = discord.Embed(description=f"{msg.content}\n\n\n{msg.author.mention}\nhttps://discord.com/channels/{msg.guild.id}/{msg.channel.id}/{msg.id}")
+        embed.set_author(name=f"{msg.author.name} in #{msg.channel}", icon_url=msg.author.avatar_url)
         if len(msg.attachments) != 0:
             embed.set_image(url=msg.attachments[0].url)
         await pinboard_channel.send(embed=embed)
