@@ -32,19 +32,63 @@ pref_file = "preferences.pickle"
 class QuackPrefs:
     def __init__(self, save_filename):
         self.save_filename = save_filename 
-        self.guilds = {}
-        self.save()
+        self.load()
 
-    def set_prefs(self, guild_id, pref_val_dict):
+    def set_prefs(self, guild_id, prefs):
+        self.load_checked()
         if guild_id not in self.guilds:
             self.guilds[guild_id] = {}
-        self.guilds[guild_id].update(pref_val_dict)
+        self.guilds[guild_id].update(prefs)
+        self.save()
+    
+    def __setitem__(self, guild_id, prefs):
+        self.load_checked()
+        if guild_id not in self.guilds:
+            self.guilds[guild_id] = {}
+        self.guilds[guild_id].update(prefs)
         self.save()
 
-    def save(self):
-        pickle.dump(self, open(self.save_filename, "wb"))
+    def get_pref(self, guild_id, pref):
+        self.load_checked()
+        if guild_id not in self.guilds or pref not in self.guilds["pref"]:
+            return None
+        return self.guilds[guild_id]["pref"]
 
-try:
-    prefs = pickle.load(open(pref_file, "rb"))
-except FileNotFoundError:
-    prefs = QuackPrefs(pref_file)
+    def __getitem__(self, guild_id):
+        self.load_checked()
+        if guild_id not in self.guilds:
+            self.guilds[guild_id] = {}
+
+        class GetRetObject():
+            def __init__(self, parent, guild_id):
+                self.prefs = parent.guilds[guild_id]
+                self.parent = parent
+            def __setitem__(self, pref, val):
+                parent.load_checked()
+                self.prefs[pref] = val
+                parent.save()
+            def __getitem__(self, pref):
+                parent.load_checked()
+                if pref not in self.prefs:
+                    return None
+                return self.prefs[pref]
+
+        return GetRetObject(self, guild_id)
+
+    def load_checked(self):
+        last_modified = os.path.getmtime(self.save_filename)
+        if last_modified > self.last_updated:
+            self.load()
+
+    def load(self):
+        try:
+            self.guilds = pickle.load(open(self.save_filename, "rb"))
+        except FileNotFoundError:
+            self.guilds = {}
+            self.save()
+        self.last_updated = time.time()
+
+    def save(self):
+        pickle.dump(self.guilds, open(self.save_filename, "wb"))
+
+prefs = QuackPrefs(pref_file)

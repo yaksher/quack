@@ -43,11 +43,11 @@ async def on_raw_reaction_add(payload):
             pass
     elif payload.emoji.name == pinboard_emote:
         msg = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
-        if "pinboard" not in prefs.guilds[msg.guild.id] or prefs.guilds[msg.guild.id]["pinboard"] is None:
+        if prefs.get_pref(msg.guild.id, "pinboard") is None:
             return
         try:
             react = next(react for react in msg.reactions if react.emoji == pinboard_emote)
-            if react.count >= prefs.guilds[msg.guild.id]["emote_count"]:
+            if react.count >= prefs.get_pref(msg.guild.id, "emote_count"):
                 await pinboard(msg)
         except StopIteration:
             pass
