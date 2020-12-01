@@ -23,7 +23,14 @@ previously_pinned = defaultdict(lambda: False)
 
 @bot.event
 async def on_raw_reaction_add(payload):
-    print(payload, payload.emoji)
+    async def pinboard(msg):
+        pinboard_channel = bot.get_channel(prefs.guilds[msg.guild.id]["pinboard"])
+        embed = discord.Embed(description=f"{msg.content}\n\n\nhttps://discord.com/channels/{msg.guild.id}/{msg.channel.id}/{msg.id}")
+        embed.set_author(name=f"{msg.author.name} in {msg.channel}", icon_url=msg.author.avatar_url)
+        if len(msg.attachments) != 0:
+            embed.set_image(url=msg.attachments[0].url)
+        await pinboard_channel.send(embed=embed)
+
     if payload.emoji.name == pin_emote:
         msg = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
         try:
@@ -44,14 +51,6 @@ async def on_raw_reaction_add(payload):
                 await pinboard(msg)
         except StopIteration:
             pass
-
-    async def pinboard(msg):
-        pinboard_channel = bot.get_channel(prefs.guilds[msg.guild.id]["pinboard"])
-        embed = discord.Embed(title=f"in {msg.channel}>", url=f"https://discord.com/channels/{msg.guild.id}/{msg.channel.id}/{msg.id}",
-                              description=msg.content)
-        embed.set_author(name=msg.author.name, url=f"https://discord.com/channels/{msg.guild.id}/{msg.channel.id}/{msg.id}", icon_url=msg.author.avatar_url)
-        embed.set_image(url=msg.attachments[0].url)
-        await pinboard_channel.send(embed=embed)
 
 
 @bot.event
