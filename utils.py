@@ -258,12 +258,6 @@ async def recover_starboard(ctx):
             downloads.dispatch(download(channel))
     tasks_rem[0] = len(downloads.tasks)
     await downloads()
-    sorted_ids = sorted(emote_counts.keys(), key=lambda x: emote_counts[x], reverse=True)
-    lines = [f"{next(emoji for emoji in ctx.guild.emojis if emoji.id == emoji_id)}: {emote_counts[emoji_id]}" for emoji_id in sorted_ids]
-    outputs = ["\n".join(lines[i*50:(i+1)*50]) for i in range(ceil(len(lines)/50))]
-    for i, out in enumerate(outputs):
-        embed = discord.Embed(title=f"Emote counts ({i + 1}/{len(outputs)})", description=out)
-        await ctx.send(embed=embed)
 
 
 f = open("maintoken.txt", "r")
