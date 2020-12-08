@@ -34,70 +34,79 @@ class QuackPrefs:
         self.save_filename = save_filename
         self.last_updated = time.time()
         self.load()
-
-    def set_prefs(self, guild_id, prefs):
-        self.load_checked()
-        if guild_id not in self.guilds:
-            self.guilds[guild_id] = {}
-        self.guilds[guild_id].update(prefs)
-        self.save()
-    
-    def __setitem__(self, guild_id, prefs):
-        self.load_checked()
-        if guild_id not in self.guilds:
-            self.guilds[guild_id] = {}
-        self.guilds[guild_id] = prefs
-        self.save()
-
-    def get_pref(self, guild_id, pref):
-        self.load_checked()
-        if guild_id not in self.guilds or pref not in self.guilds[guild_id]:
-            return None
-        return self.guilds[guild_id][pref]
-
-    def __getitem__(self, guild_id):
-        self.load_checked()
-        if guild_id not in self.guilds:
-            self.guilds[guild_id] = {}
-
         class GetRetObject():
             def __init__(self, parent, guild_id):
                 self.prefs = parent.guilds[guild_id]
                 self.parent = parent
                 self.guild_id = guild_id
             def __setitem__(self, pref, val):
-                self.parent.load_checked()
+                self.parent._load_checked()
                 self.prefs[pref] = val
-                self.parent.save()
+                self.parent._save()
             def __getitem__(self, pref):
-                self.parent.load_checked()
+                self.parent._load_checked()
                 if pref not in self.prefs:
                     return None
                 return self.prefs[pref]
             def update(self, prefs):
-                self.parent.load_checked()
+                self.parent._load_checked()
                 self.prefs.update(prefs)
-                self.parent.save()
+                self.parent._save()
             def __iadd__(self, prefs):
                 self.update(prefs)
                 return self.parent.guilds[self.guild_id]
+        self.RetObject = GetRetObject
 
-        return GetRetObject(self, guild_id)
+    def set_pref(self, guild_id, pref, val):
+        self._load_checked()
+        if guild_id not in self.guilds:
+            self.guilds[guild_id] = {}
+        self.guilds[guild_id][pref] = val
+        self._save()
 
-    def load_checked(self):
+    def set_prefs(self, guild_id, prefs):
+        self._load_checked()
+        if guild_id not in self.guilds:
+            self.guilds[guild_id] = {}
+        self.guilds[guild_id].update(prefs)
+        self._save()
+    
+    def get_pref(self, guild_id, pref):
+        self._load_checked()
+        if guild_id not in self.guilds or pref not in self.guilds[guild_id]:
+            return None
+        return self.guilds[guild_id][pref]
+
+    def __setitem__(self, guild_id, prefs):
+        self._load_checked()
+        if guild_id not in self.guilds:
+            self.guilds[guild_id] = {}
+        self.guilds[guild_id] = prefs
+        self._save()
+
+    def __getitem__(self, guild_id):
+        self._load_checked()
+        if guild_id not in self.guilds:
+            self.guilds[guild_id] = {}
+        return self._ret_object(guild_id)
+
+    def _load_checked(self):
         last_modified = os.path.getmtime(self.save_filename)
         if last_modified > self.last_updated:
-            self.load()
+            self._load()
 
-    def load(self):
+    def _load(self):
         try:
             self.guilds = pickle.load(open(self.save_filename, "rb"))
         except FileNotFoundError:
             self.guilds = {}
-            self.save()
+            self._save()
         self.last_updated = time.time()
 
-    def save(self):
+    def _save(self):
         pickle.dump(self.guilds, open(self.save_filename, "wb"))
+
+    def _ret_object(self, guild_id):
+        return self.RetObject(self, guild_id)
 
 prefs = QuackPrefs(pref_file)
