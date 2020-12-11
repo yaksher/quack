@@ -33,7 +33,7 @@ class QuackPrefs:
     def __init__(self, save_filename):
         self.save_filename = save_filename
         self.last_updated = time.time()
-        self.load()
+        self._load()
         class GetRetObject():
             def __init__(self, parent, guild_id):
                 self.prefs = parent.guilds[guild_id]
