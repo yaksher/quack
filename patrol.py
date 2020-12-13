@@ -268,5 +268,4 @@ def generateNicks(n):
             do_nothing_expression = 0
     return nicks
 
-
 bot.run(token)
