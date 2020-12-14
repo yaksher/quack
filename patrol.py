@@ -47,7 +47,7 @@ async def on_raw_reaction_add(payload):
             return
         try:
             react = next(react for react in msg.reactions if react.emoji == pinboard_emote)
-            if react.count >= prefs[msg.guild.id]["emote_count"]:
+            if react.count == prefs[msg.guild.id]["emote_count"]:
                 await pinboard(msg)
         except StopIteration:
             pass
