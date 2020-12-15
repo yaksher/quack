@@ -16,20 +16,20 @@ try:
         print(f"launching {module}")
         processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
     while True:
-        # pull_attempt = str(subprocess.check_output(f"git --git-dir={os.path.dirname(os.path.abspath(__file__))}/.git pull", shell=True))[2:-1]
+        pull_attempt = str(subprocess.check_output(f"git --git-dir={os.path.dirname(os.path.abspath(__file__))}/.git pull", shell=True))[2:-1]
         # pull_attempt = str(subprocess.check_output(f"git pull", shell=True))[2:-1]
-        # if "Already up to date." not in pull_attempt:
-        #     print("Pulled something.")
-        #     if sys.argv[0] in pull_attempt:
-        #         for process in processes.values():
-        #             process.terminate()
-        #         for process in processes.values():
-        #             process.wait()
-        #         os.execl(sys.executable, sys.executable, *sys.argv)
-        #     for module in modules:
-        #         if module in pull_attempt:
-        #             processes[module].terminate()
-        #             processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
+        if "Already up to date." not in pull_attempt:
+            print("Pulled something.")
+            if sys.argv[0] in pull_attempt:
+                for process in processes.values():
+                    process.terminate()
+                for process in processes.values():
+                    process.wait()
+                os.execl(sys.executable, sys.executable, *sys.argv)
+            for module in modules:
+                if module in pull_attempt:
+                    processes[module].terminate()
+                    processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
         for module, process in processes.items():
             log_files[module].flush()
             poll_result = process.poll()
