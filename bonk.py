@@ -53,8 +53,7 @@ def get_hug():
     hugHistory.append[ret_img]
     hugHistCounts[ret_img] += 1
     while len(hugHistory) > len(hugPics):
-        hugHistCounts[hugHistory[0]] -= 1
-        hugHistory = hugHistory[1:]
+        hugHistCounts[hugHistory.pop(0)] -= 1
     return ret_img
 
 def download(img_url):
