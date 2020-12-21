@@ -36,7 +36,8 @@ hugPics = [
   "https://cdn.discordapp.com/attachments/664275859317850175/736419483039694888/image0.jpg",
   "https://cdn.discordapp.com/attachments/664275859317850175/736419615726370977/2_021215034916.png",
   "https://cdn.discordapp.com/attachments/664275859317850175/736419866965311568/image0.jpg",
-  "https://cdn.discordapp.com/attachments/724878683155857449/781795444850032680/image0-30.jpg"]
+  "https://cdn.discordapp.com/attachments/724878683155857449/781795444850032680/image0-30.jpg",
+  "https://cdn.discordapp.com/attachments/659558791431585823/790649555875135508/EpLhQOvUcAACnST.png"]
 honkPics = [
   "https://cdn.discordapp.com/attachments/659440262422069272/737713310799101972/medium_honk.jpg",
   "https://cdn.discordapp.com/attachments/659440262422069272/737714573519487068/image.png",
