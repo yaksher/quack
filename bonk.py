@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import re, sys, os, io
 import requests
-from random import choice
+from random import choices
 
 description = ""
 
@@ -39,11 +39,23 @@ hugPics = [
   "https://cdn.discordapp.com/attachments/724878683155857449/781795444850032680/image0-30.jpg",
   "https://cdn.discordapp.com/attachments/659558791431585823/790649555875135508/EpLhQOvUcAACnST.png",
   "https://cdn.discordapp.com/attachments/659440262422069272/790652751595175936/beaver-duo.jpg"]
+hugHistory = []
+hugHistCounts = {img: 0 for img in hugPics}
 honkPics = [
   "https://cdn.discordapp.com/attachments/659440262422069272/737713310799101972/medium_honk.jpg",
   "https://cdn.discordapp.com/attachments/659440262422069272/737714573519487068/image.png",
   "https://cdn.discordapp.com/attachments/659440262422069272/737714051731161168/tenor.gif",
   "https://cdn.discordapp.com/attachments/659440262422069272/737711858202574858/OIP.png"]
+
+def get_hug():
+    weights = [1/(hugHistCounts[img] + 1) for img in hugPics]
+    ret_img = choices(hugPics, weights)
+    hugHistory.append[ret_img]
+    hugHistCounts[ret_img] += 1
+    while len(hugHistory) > len(hugPics):
+        hugHistCounts[hugHistory[0]] -= 1
+        hugHistory = hugHistory[1:]
+    return ret_img
 
 def download(img_url):
     buf = io.BytesIO()
@@ -82,7 +94,7 @@ async def on_message(msg):
         return
     ping = ping.group(0)
     if "hug" in msg_lower:
-        img_url = choice(hugPics)
+        img_url = get_hug()
         img = discord.File(get_file(img_url))
         await msg.channel.send(f"{msg.author.mention} has sent a hug to {ping}!", file = img)
         return
