@@ -335,6 +335,12 @@ def is_boomer(msg):
 
 @bot.command()
 async def set_pinboard(ctx, emote_count: int, channel_id = 0):
+    if not ctx.author.permissions_in(ctx.channel).manage_messages or not ctx.author.permissions_in(ctx.channel).manage_channels or not ctx.author.permissions_in(ctx.channel).manage_server:
+        log_com(ctx, False)
+        msg = await ctx.send("Invalid perms.")
+        await msg.delete()
+        return
+    log_com(ctx)
     if channel_id == -1:
         prefs[ctx.guild.id] += {"pinboard": None, "emote_count": 0}
         await ctx.send(f"Unset pinboard channel for {ctx.guild}.")
