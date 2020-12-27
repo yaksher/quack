@@ -87,8 +87,6 @@ async def on_message(msg):
         await pong_msg.edit(content=pong2)
     global change_TSS
     tasks = TaskManager()
-    if re.findall(r"i'm.{0,10}worthless", msg.content.lower):
-        tasks.dispatch(msg.channel.send, "<:bap:752947048839643247>")
     hell_id = 107490019710615552
     send = msg.channel.send
     if msg.guild and msg.guild.id == ace_id:
