@@ -334,7 +334,7 @@ def is_boomer(msg):
     return msg.author.id == 280497242714931202
 
 @bot.command()
-@commands.has_permissions(manage_server=True, manage_channels=True)
+@commands.has_permissions(manage_guild=True, manage_channels=True)
 async def set_pinboard(ctx, emote_count: int, channel_id = 0):
     log_com(ctx)
     if channel_id == -1:
