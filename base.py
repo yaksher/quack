@@ -231,6 +231,8 @@ async def wordcounts(ctx, limit = None, ignore_ooc_check = 1):
 
 @bot.command()
 async def fu(ctx):
+    if ctx.guild.id != tech_id:
+        return
     await ctx.send("Once upon a time, Phia thought Savan was fucking with her nickname and changed it to \"FU 7\" (Fuck you Savan).")
     await asyncio.sleep(1.4)
     await ctx.send("Savan, wrongfully accused of such egregious misconduct, change his own name to \"FU 2\".")
