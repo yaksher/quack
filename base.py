@@ -334,13 +334,8 @@ def is_boomer(msg):
     return msg.author.id == 280497242714931202
 
 @bot.command()
-@bot.command.has_permissions(manage_server=True, manage_channels=True)
+@commands.has_permissions(manage_server=True, manage_channels=True)
 async def set_pinboard(ctx, emote_count: int, channel_id = 0):
-    if not ctx.author.permissions_in(ctx.channel).manage_messages or not ctx.author.permissions_in(ctx.channel).manage_channels or not ctx.author.permissions_in(ctx.channel).manage_server:
-        log_com(ctx, False)
-        msg = await ctx.send("Invalid perms.")
-        await msg.delete()
-        return
     log_com(ctx)
     if channel_id == -1:
         prefs[ctx.guild.id] += {"pinboard": None, "emote_count": 0}
@@ -354,6 +349,7 @@ async def set_pinboard(ctx, emote_count: int, channel_id = 0):
 @set_pinboard.error
 async def set_pinboard_error(error, ctx):
    if isinstance(error, MissingPermissions):
+       log_com(ctx, False)
        await ctx.send("You don't have permission to do that!")
 
 bot.run(token)
