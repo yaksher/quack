@@ -350,7 +350,7 @@ async def set_pinboard(ctx, emote_count: int, channel_id = 0):
 
 @set_pinboard.error
 async def set_pinboard_error(error, ctx):
-   if isinstance(error, MissingPermissions):
+   if isinstance(error, discord.errors.MissingPermissions):
        log_com(ctx, False)
        await ctx.send("You don't have permission to do that!")
 
