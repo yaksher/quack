@@ -4,6 +4,7 @@ import re, sys, os, io
 import requests
 from random import choices
 from collections import defaultdict
+import mimetypes
 
 description = ""
 
@@ -81,6 +82,19 @@ def get_file(img_url):
         f.close()
     return open(file_name, "rb")
 
+URL_REGEX = re.compile(
+        r'^(?:http|ftp)s?://' # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+        r'localhost|' #localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+        r'(?::\d+)?' # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+def is_url_and_image(url):
+    if re.match(URL_REGEX, url) is None:
+        return false
+    mimetype, encoding = mimetypes.guess_type(url)
+    return (mimetype and mimetype.startswith('image'))
+
 from datetime import *
 @bot.event
 async def on_message(msg):
@@ -88,7 +102,7 @@ async def on_message(msg):
         received = datetime.utcnow().timestamp()
         await msg.channel.send("Server to bot: {:.1f}ms".format((received - msg.created_at.timestamp()) * 1000))
         await msg.channel.send("Bot to server: {:.1f}ms".format(bot.latency * 1000))
-    if msg.content.startswith(";add_hug ") and msg.author.id in admin_ids:
+    if msg.content.startswith(";add_hug ") and msg.author.id in admin_ids and is_url_and_image(msg.content[9:]):
         hug_url = msg.content[9:]
         open("bonk_hugpics.txt", "a").write(hug_url + "\n")
         hugPics.append(hug_url)
