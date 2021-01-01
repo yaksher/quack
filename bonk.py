@@ -3,6 +3,7 @@ from discord.ext import commands
 import re, sys, os, io
 import requests
 from random import choices
+from collections import defaultdict
 
 description = ""
 
@@ -42,7 +43,7 @@ async def on_ready():
 #   "https://cdn.discordapp.com/attachments/664275859317850175/794451644766879744/20201227_040519.png"]
 hugPics = open("bonk_hugpics.txt").read().splitlines()
 hugHistory = []
-hugHistCounts = {img: 0 for img in hugPics}
+hugHistCounts = defaultdict(lambda: 0)
 honkPics = [
   "https://cdn.discordapp.com/attachments/659440262422069272/737713310799101972/medium_honk.jpg",
   "https://cdn.discordapp.com/attachments/659440262422069272/737714573519487068/image.png",
