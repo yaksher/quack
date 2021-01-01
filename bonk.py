@@ -85,7 +85,7 @@ async def on_message(msg):
         await msg.channel.send("Bot to server: {:.1f}ms".format(bot.latency * 1000))
     if msg.content.startswith(";add_hug ") and msg.author.id == 133270838605643776:
         hug_url = msg.content[9:]
-        open("bonk_hugpics.txt", "w").write(hug_url + "\n")
+        open("bonk_hugpics.txt", "a").write(hug_url + "\n")
         hugPics.append(hug_url)
         await msg.channel.send(f"Added hug {hug_url}")
     msg_lower = msg.content.lower()
