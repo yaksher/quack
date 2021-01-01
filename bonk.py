@@ -52,7 +52,7 @@ honkPics = [
 def get_hug():
     weights = [1/(hugHistCounts[img] + 1) for img in hugPics]
     ret_img = choices(hugPics, weights)
-    hugHistory.append[ret_img]
+    hugHistory.append(ret_img)
     hugHistCounts[ret_img] += 1
     while len(hugHistory) > len(hugPics):
         hugHistCounts[hugHistory.pop(0)] -= 1
@@ -69,11 +69,10 @@ def download(img_url):
 
 def get_file(img_url):
     file_name = "imgs/" + img_url.replace("https://", "").replace("/", "_")
-    if os.path.isfile(file_name):
-        return open(file_name, "rb")
-    f = open(file_name, "wb")
-    f.write(download(img_url).getbuffer())
-    f.close()
+    if not os.path.isfile(file_name):
+        f = open(file_name, "wb")
+        f.write(download(img_url).getbuffer())
+        f.close()
     return open(file_name, "rb")
 
 from datetime import *
