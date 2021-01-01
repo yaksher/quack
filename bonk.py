@@ -17,6 +17,11 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name="with my Bonking stick"))
     print('------')
 
+yak_id = 133270838605643776
+slav_id = 193701039633989632
+tom_id = 395419912845393923
+admin_ids = [yak_id, slav_id, tom_id]
+
 # hugPics = [
 #   "https://cdn.discordapp.com/attachments/678715301222809641/736415604428505099/Untitled-2.png",
 #   "https://cdn.discordapp.com/attachments/678715301222809641/736415742991532112/095a521d-e2b1-430d-8cca-6d5a0c4c6754.png",
@@ -83,7 +88,7 @@ async def on_message(msg):
         received = datetime.utcnow().timestamp()
         await msg.channel.send("Server to bot: {:.1f}ms".format((received - msg.created_at.timestamp()) * 1000))
         await msg.channel.send("Bot to server: {:.1f}ms".format(bot.latency * 1000))
-    if msg.content.startswith(";add_hug ") and msg.author.id == 133270838605643776:
+    if msg.content.startswith(";add_hug ") and msg.author.id in admin_ids:
         hug_url = msg.content[9:]
         open("bonk_hugpics.txt", "a").write(hug_url + "\n")
         hugPics.append(hug_url)
