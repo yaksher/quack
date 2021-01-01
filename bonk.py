@@ -16,29 +16,31 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name="with my Bonking stick"))
     print('------')
 
-hugPics = [
-  "https://cdn.discordapp.com/attachments/678715301222809641/736415604428505099/Untitled-2.png",
-  "https://cdn.discordapp.com/attachments/678715301222809641/736415742991532112/095a521d-e2b1-430d-8cca-6d5a0c4c6754.png",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736418579695796274/image0.jpg",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736418823393116250/2Q.png",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736418857207595058/image0.jpg",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736418865353064558/2Q.png",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736418910185979974/9k.png",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736418952699314206/2Q.png",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736419004897558618/9k.png",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736419089245012058/images.png",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736419089236492398/image0.jpg",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736419187265896498/2Q.png",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736419206563627169/image0.jpg",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736419318362800159/8_021215035025.png",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736419332568907786/image0.jpg",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736419397865963570/7_021215035025.png",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736419483039694888/image0.jpg",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736419615726370977/2_021215034916.png",
-  "https://cdn.discordapp.com/attachments/664275859317850175/736419866965311568/image0.jpg",
-  "https://cdn.discordapp.com/attachments/724878683155857449/781795444850032680/image0-30.jpg",
-  "https://cdn.discordapp.com/attachments/659558791431585823/790649555875135508/EpLhQOvUcAACnST.png",
-  "https://cdn.discordapp.com/attachments/659440262422069272/790652751595175936/beaver-duo.jpg"]
+# hugPics = [
+#   "https://cdn.discordapp.com/attachments/678715301222809641/736415604428505099/Untitled-2.png",
+#   "https://cdn.discordapp.com/attachments/678715301222809641/736415742991532112/095a521d-e2b1-430d-8cca-6d5a0c4c6754.png",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736418579695796274/image0.jpg",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736418823393116250/2Q.png",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736418857207595058/image0.jpg",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736418865353064558/2Q.png",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736418910185979974/9k.png",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736418952699314206/2Q.png",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736419004897558618/9k.png",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736419089245012058/images.png",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736419089236492398/image0.jpg",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736419187265896498/2Q.png",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736419206563627169/image0.jpg",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736419318362800159/8_021215035025.png",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736419332568907786/image0.jpg",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736419397865963570/7_021215035025.png",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736419483039694888/image0.jpg",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736419615726370977/2_021215034916.png",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/736419866965311568/image0.jpg",
+#   "https://cdn.discordapp.com/attachments/724878683155857449/781795444850032680/image0-30.jpg",
+#   "https://cdn.discordapp.com/attachments/659558791431585823/790649555875135508/EpLhQOvUcAACnST.png",
+#   "https://cdn.discordapp.com/attachments/659440262422069272/790652751595175936/beaver-duo.jpg",
+#   "https://cdn.discordapp.com/attachments/664275859317850175/794451644766879744/20201227_040519.png"]
+hugPics = open("bonk_hugpics.txt").read().splitlines()
 hugHistory = []
 hugHistCounts = {img: 0 for img in hugPics}
 honkPics = [
@@ -81,6 +83,11 @@ async def on_message(msg):
         received = datetime.utcnow().timestamp()
         await msg.channel.send("Server to bot: {:.1f}ms".format((received - msg.created_at.timestamp()) * 1000))
         await msg.channel.send("Bot to server: {:.1f}ms".format(bot.latency * 1000))
+    if msg.content.startswith(";add_hug ") and msg.author.id == 133270838605643776:
+        hug_url = msg.content[9:]
+        open("bonk_hugpics.txt", "w").write(hug_url + "\n")
+        hugPics.append(hug_url)
+        await msg.channel.send(f"Added hug {hug_url}")
     msg_lower = msg.content.lower()
     if msg_lower == "restart" and msg.author.id == 735279544524603493:
         os.system("git pull")
