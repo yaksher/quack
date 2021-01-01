@@ -51,7 +51,7 @@ honkPics = [
 
 def get_hug():
     weights = [1/(hugHistCounts[img] + 1) for img in hugPics]
-    ret_img = choices(hugPics, weights)
+    ret_img = choices(hugPics, weights)[0]
     hugHistory.append(ret_img)
     hugHistCounts[ret_img] += 1
     while len(hugHistory) > len(hugPics):
