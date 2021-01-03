@@ -128,7 +128,7 @@ async def servercounts(ctx):
         await task
     print("-------  -------")
     p_list = [(k, v, v / message_counts[k]) for k, v in counts.items()]
-    p_list.sort(key=lambda tup: tup[2])
+    p_list.sort(key=lambda tup: tup[1])
     c_list = [(k, v) for k, v in channel_counts.items()]
     c_list.sort(key=lambda tup: tup[1])
     for tup in reversed(p_list):
