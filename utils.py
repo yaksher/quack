@@ -97,9 +97,13 @@ async def getmessages(ctx):
 from datetime import datetime
 @bot.command()
 async def servercounts(ctx, *args):
+    if ctx.author.id != yak_id:
+        await ctx.send("No perms.")
+        return
     try:
         await ctx.message.delete()
     except discord.errors.Forbidden:
+        print("Could not delete.")
         pass
     blacklist_ids = [int(arg) for arg in args]
     log_com(ctx)
