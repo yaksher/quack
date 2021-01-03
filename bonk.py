@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import re, sys, os, io
 import requests
-from random import choices
+from random import choice, choices
 from collections import defaultdict
 import mimetypes
 

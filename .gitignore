@@ -5,14 +5,7 @@ rp-ooc-rip.txt
 rp-rwby-ooc-rip.txt
 rp-rwby-rip.txt
 rp-sao-rip.txt
-T e c h e r s_2020-08-14-trimmed.txt
-T e c h e r s_2020-08-14.txt
-T e c h e r s_2020-08-15 01:05:42.081705.txt
-T e c h e r s_2020-08-15-trimmed.txt
-T e c h e r s_2020-08-16 00:19:22.202467.txt
-T e c h e r s_2020-08-16 00:33:19.450306.txt
-T e c h e r s_2020-08-16 02:10:03.420901.txt
-T e c h e r s_2020-08-16 02:10:10.086205.txt
+T e c h e r s*.txt
 bonk.js
 char_net_1.h5
 CULTECH_2020-08-16 18:49:59.013304.txt
@@ -83,3 +76,4 @@ logs/bonk_log.txt
 .DS_Store
 vent_salt.txt
 preferences.pickle
+Ace Fiction*.txt
