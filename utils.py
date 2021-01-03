@@ -96,11 +96,12 @@ async def getmessages(ctx):
 
 from datetime import datetime
 @bot.command()
-async def servercounts(ctx):
+async def servercounts(ctx, *args):
     try:
         await ctx.message.delete()
     except discord.errors.Forbidden:
         pass
+    blacklist_ids = [int(arg) for arg in args]
     log_com(ctx)
     f = open(f"{ctx.guild.name}_{datetime.now()}.txt", "w+")
     counts = defaultdict(lambda: 0)
@@ -121,13 +122,13 @@ async def servercounts(ctx):
     tasks = []
     tasks_rem = [0]
     for channel in ctx.guild.channels:
-        if type(channel) is discord.TextChannel:
+        if type(channel) is discord.TextChannel and channel.id not in blacklist_ids:
             tasks.append(asyncio.create_task(download(channel)))
     tasks_rem[0] = len(tasks)
     for task in tasks:
         await task
     print("-------  -------")
-    p_list = [(k, v, v / message_counts[k]) for k, v in counts.items()]
+    p_list = [(k, v, v / message_counts[k]) for k, v in counts.items() if v >= 10]
     p_list.sort(key=lambda tup: tup[1])
     c_list = [(k, v) for k, v in channel_counts.items()]
     c_list.sort(key=lambda tup: tup[1])
