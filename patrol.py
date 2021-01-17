@@ -14,10 +14,13 @@ bot = commands.Bot(command_prefix='?', description=description)
 @bot.event
 async def on_ready():
     exec(ready)
+    global pinboard_pinned_emote
+    pinboard_pinned_emote = await bot.get_guild(emotes_id).fetch_emoji(800275144235941938)
 
 REACT_PIN_EMOTE_COUNT = 4
 pin_emote = "📌"
 pinboard_emote = "⭐"
+pinboard_pinned_emote = None
 
 previously_pinned = defaultdict(lambda: False)
 
@@ -25,10 +28,11 @@ previously_pinned = defaultdict(lambda: False)
 async def on_raw_reaction_add(payload):
     async def pinboard(msg):
         pinboard_channel = bot.get_channel(prefs.guilds[msg.guild.id]["pinboard"])
-        embed = discord.Embed(description=f"{msg.content}\n\n\n{msg.author.mention}\nhttps://discord.com/channels/{msg.guild.id}/{msg.channel.id}/{msg.id}")
+        embed = discord.Embed(description=f"{msg.content}\n\n\n{msg.author.mention}\n[Original message]({msg.jump_url})")
         embed.set_author(name=f"{msg.author.name} in #{msg.channel}", icon_url=msg.author.avatar_url)
         if len(msg.attachments) != 0:
             embed.set_image(url=msg.attachments[0].url)
+        await msg.add_reaction(pinboard_pinned_emote)
         await pinboard_channel.send(embed=embed)
 
     if payload.emoji.name == pin_emote:
@@ -47,7 +51,8 @@ async def on_raw_reaction_add(payload):
             return
         try:
             react = next(react for react in msg.reactions if react.emoji == pinboard_emote)
-            if react.count == prefs[msg.guild.id]["emote_count"]:
+            react_other = next(react for react in msg.reactions if react.emoji == pinboard_pinned_emote)
+            if react.count >= prefs[msg.guild.id]["emote_count"] and not react_other.me:
                 await pinboard(msg)
         except StopIteration:
             pass
