@@ -6,39 +6,69 @@ import os
 
 # this comment is still a random change for test commit
 
-modules = ["ventbot.py", "base.py", "patrol.py", "bonk.py"]#, "graph.py"]
-processes = {}
-log_files = {}
-try:
-    for module in modules:
-        log_files[module] = open(f"logs/{module[:-3]}_log.txt", "a")
-        log_files[module].write(f"\n\nlogs from: {datetime.datetime.now()}\n\n")
-        print(f"launching {module}")
-        processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
-    while True:
-        pull_attempt = str(subprocess.check_output(f"git --git-dir={os.path.dirname(os.path.abspath(__file__))}/.git pull", shell=True))[2:-1]
-        # pull_attempt = str(subprocess.check_output(f"git pull", shell=True))[2:-1]
-        if "Already up to date." not in pull_attempt:
-            print("Pulled something.")
-            if sys.argv[0] in pull_attempt:
-                for process in processes.values():
-                    process.terminate()
-                for process in processes.values():
-                    process.wait()
-                os.execl(sys.executable, sys.executable, *sys.argv)
-            for module in modules:
-                if module in pull_attempt:
-                    processes[module].terminate()
-                    processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
-        for module, process in processes.items():
-            log_files[module].flush()
-            poll_result = process.poll()
-            if poll_result is not None:
-                print(f"launching {module} again")
-                processes[module] = subprocess.Popen([sys.executable, module], stderr=log_files[module], stdout=log_files[module])
-        time.sleep(5)
-except KeyboardInterrupt:
-    for process in processes.values():
-        process.terminate()
-    for process in processes.values():
-        process.wait()
+module_files = ["ventbot.py", "base.py", "patrol.py", "bonk.py"]#, "graph.py"]
+class Module:
+    def __init__(self, name, filename):
+        self.name = name
+        self.log = open(f"logs/{self.name}_log.txt", "a")
+        self.log.write(f"\n\nlogs from: {datetime.datetime.now()}\n\n")
+        self.file = filename
+        self.process = None
+        self.launch_time = None
+        print(f"Initialized {self.name}")
+
+    def launch(self):
+        self.process = subprocess.Popen([sys.executable, self.file], stderr=self.log, stdout=self.log)
+        self.launch_time = time.time()
+        print(f"Launched {self.name}")
+
+    def restart(self):
+        self.kill()
+        self.launch()
+        print(f"Restarting {self.name}")
+
+    def cond_restart(self):
+        last_modified = os.path.getmtime(self.file)
+        self.log.flush()
+        if last_modified > self.launch_time or self.process.poll() is not None:
+            self.restart()
+
+    def kill(self):
+        self.process.terminate()
+        return self.process
+
+class ModuleManager:
+    def __init__(self, files, loop_time):
+        self.modules = [Module(f[:-3], f) for f in files]
+        self.loop_time = loop_time
+        self.init = time.time()
+
+    def __iter__(self):
+        return self.modules.__iter__()
+    
+    def run(self):
+        try:
+            for module in self:
+                module.launch()
+            while True:
+                self.cond_restart()
+
+                for module in self:
+                    module.cond_restart()
+                
+                time.sleep(self.loop_time)
+        except KeyboardInterrupt:
+            self.kill_all()
+
+    def cond_restart(self):
+        if os.path.getmtime(sys.argv[0]) > self.init:
+            self.kill_all()
+            os.execl(sys.executable, sys.executable, *sys.argv)
+
+    def kill_all(self):
+        for p in [module.kill() for module in self]:
+            p.wait()
+
+manager = ModuleManager(module_files, 5)
+
+manager.run()
