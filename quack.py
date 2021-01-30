@@ -10,7 +10,10 @@ module_files = ["ventbot.py", "base.py", "patrol.py", "bonk.py"]#, "graph.py"]
 class Module:
     def __init__(self, name, filename):
         self.name = name
-        self.log = open(f"logs/{self.name}_log.txt", "a")
+        try:
+            self.log = open(f"logs/{self.name}_log.txt", "a")
+        except FileNotFoundError:
+            self.log = open(f"logs/{self.name}_log.txt", "w")
         self.log.write(f"\n\nlogs from: {datetime.datetime.now()}\n\n")
         self.file = filename
         self.process = None
